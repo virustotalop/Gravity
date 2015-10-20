@@ -30,7 +30,7 @@ registry.register(new CommandInformation("/kill <player[online]>", "kill.player"
 * Extendable
 
 #Getting started
-Please check the wiki to get started!
+Please check [the wiki](https://github.com/KennethWussmann/Levitate/wiki) to get started!
 
 #License
 Levitate is licensed under [GNU General Public License Version 2](https://github.com/KennethWussmann/Levitate/blob/master/LICENSE).
