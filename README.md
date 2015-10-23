@@ -5,7 +5,7 @@ It allowes you to register commands with arguments, permissions and description 
 #Example
 This is a simple kill command:
 ```Java
-SyntaxValidations.registerDefaultSyntax();
+SyntaxValidations.registerDefaultSyntax(pluginInstance);
 CommandRegistry registry = new CommandRegistry(pluginInstance);
 registry.registerBukkitPermissionHandler();
 		
