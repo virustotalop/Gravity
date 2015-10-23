@@ -33,6 +33,7 @@ registry.register(new CommandInformation("/kill <player[online]>", "kill.player"
 Please check [the wiki](https://github.com/KennethWussmann/Levitate/wiki) to get started!
 
 #Planned features
+* HelpMap with detailed Command-List
 * Commands with undefined amount of arguments
 * TabComplete
 
