@@ -8,7 +8,8 @@ This is a simple kill command:
 SyntaxValidations.registerDefaultSyntax(pluginInstance);
 CommandRegistry registry = new CommandRegistry(pluginInstance);
 registry.registerBukkitPermissionHandler();
-		
+registry.registerDefaultHelpMap();
+
 registry.register(new CommandInformation("/kill <player[online]>", "kill.player", "Kill a player"), new CommandHandler() {
 			
 	@Override
