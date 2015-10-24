@@ -27,6 +27,7 @@ registry.register(new CommandInformation("/kill <player[online]>", "kill.player"
 * Registers command directly to Bukkit/Spigot without plugin.yml
 * Supports command aliases
 * Bukkit/Spigot-Version independent
+* HelpMap with detailed Command-List
 * Extendable
 
 #Getting started
