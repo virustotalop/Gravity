@@ -3,8 +3,8 @@ package eu.blackwoods.levitate.syntax;
 import java.util.HashMap;
 
 import eu.blackwoods.levitate.Message;
-import eu.blackwoods.levitate.SyntaxHandler;
 import eu.blackwoods.levitate.Message.TextMode;
+import eu.blackwoods.levitate.SyntaxHandler;
 import eu.blackwoods.levitate.exception.SyntaxResponseException;
 
 public class NotEqualsSyntax implements SyntaxHandler {

@@ -7,8 +7,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import eu.blackwoods.levitate.Message;
-import eu.blackwoods.levitate.SyntaxHandler;
 import eu.blackwoods.levitate.Message.TextMode;
+import eu.blackwoods.levitate.SyntaxHandler;
 import eu.blackwoods.levitate.exception.CommandSyntaxException;
 import eu.blackwoods.levitate.exception.SyntaxResponseException;
 

@@ -6,8 +6,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 
 import eu.blackwoods.levitate.Message;
-import eu.blackwoods.levitate.SyntaxHandler;
 import eu.blackwoods.levitate.Message.TextMode;
+import eu.blackwoods.levitate.SyntaxHandler;
 import eu.blackwoods.levitate.exception.CommandSyntaxException;
 import eu.blackwoods.levitate.exception.SyntaxResponseException;
 

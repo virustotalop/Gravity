@@ -24,6 +24,7 @@ public class CommandRegistry {
 	private HashMap<CommandInformation, CommandHandler> commands = new HashMap<CommandInformation, CommandHandler>();
 	private List<String> aliases = new ArrayList<String>();
 	private PermissionHandler permissionHandler = null;
+	private HelpMap helpMap = null;
 	private Environment environment = null;
 	private Plugin plugin = null;
 	
@@ -161,6 +162,21 @@ public class CommandRegistry {
 	}
 	
 	/**
+	 * Register default HelpMap
+	 */
+	public void registerDefaultHelpMap() {
+		this.helpMap = new DefaultHelpMap(this);
+	}
+	
+	/**
+	 * Register own HelpMaoo
+	 * @param helpMap Handles the help-message
+	 */
+	public void registerHelpMap(HelpMap helpMap) {
+		this.helpMap = helpMap;
+	}
+	
+	/**
 	 * Execute a command. This method is for Java-Standalone applications.
 	 * This feature doesn't work at the moment.
 	 * @param command The base-command
@@ -171,6 +187,7 @@ public class CommandRegistry {
 	 * @throws NoPermissionException
 	 * @throws ExecutorIncompatibleException
 	 */
+	@Deprecated
 	public boolean userPassCommand(String command, String[] args) throws CommandSyntaxException, SyntaxResponseException, NoPermissionException, ExecutorIncompatibleException {
 		for(CommandInformation i : commands.keySet()) {
 			if(i.matches(CommandExecutor.PLAYER, command, args)) {
@@ -183,6 +200,7 @@ public class CommandRegistry {
 				return true;
 			}
 		}
+		if(helpMap != null) helpMap.onHelp(null, command, args);
 		return false;
 	}
 	
@@ -216,7 +234,7 @@ public class CommandRegistry {
 				return true;
 			}
 		}
-		sender.sendMessage(Message.COMMAND_DOESNT_EXIST.get(TextMode.COLOR));
+		if(helpMap != null) helpMap.onHelp(sender, command, args);
 		return false;
 	}
 	

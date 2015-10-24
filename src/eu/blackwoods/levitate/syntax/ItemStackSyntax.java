@@ -12,8 +12,8 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import eu.blackwoods.levitate.Message;
-import eu.blackwoods.levitate.SyntaxHandler;
 import eu.blackwoods.levitate.Message.TextMode;
+import eu.blackwoods.levitate.SyntaxHandler;
 import eu.blackwoods.levitate.exception.SyntaxResponseException;
 
 public class ItemStackSyntax implements SyntaxHandler {
