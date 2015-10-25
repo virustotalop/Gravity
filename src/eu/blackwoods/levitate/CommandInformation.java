@@ -2,6 +2,7 @@ package eu.blackwoods.levitate;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.regex.MatchResult;
 import java.util.regex.Pattern;
@@ -71,9 +72,9 @@ public class CommandInformation {
 			processCommandBase(syntax);
 			return;
 		}
-		
-		for(MatchResult mr : SyntaxValidations.allMatches(Pattern.compile("<([^>]*)>|([\\/|\\?|\\$][.^\\w]*)"), syntax)) {
-			String arg = mr.group();
+		Iterator<MatchResult> matches = SyntaxValidations.allMatches(Pattern.compile("<([^>]*)>|([\\/|\\?|\\$][.^\\w]*)"), syntax).iterator();
+		while(matches.hasNext()) {
+			String arg = matches.next().group();
 			if(arg.startsWith("$")|arg.startsWith("?")|arg.startsWith("/")) {
 				processCommandBase(arg);
 				continue;
@@ -85,12 +86,18 @@ public class CommandInformation {
 			if(!arg.endsWith(">")) throw new CommandSyntaxException(Message.CI_ARG_HAS_TO_END_WITH_CHAR.get(TextMode.COLOR, replaces));
 			arg = arg.substring(1, arg.length()-1);
 			String method = parseArgument(arg).get(0);
+			boolean unlimited = false;
+			if(method.endsWith("...")) {
+				if(matches.hasNext()) throw new CommandSyntaxException(Message.CI_ARG_CANNOT_BE_UNLIMITED.get(TextMode.COLOR, replaces));
+				unlimited = true;
+				method = method.substring(0, method.length()-3);
+			}
 			if(!SyntaxValidations.existHandler(method)) {
 				replaces.clear();
 				replaces.put("%method%", method);
 				throw new CommandSyntaxException(Message.CI_NO_SYNTAX.get(TextMode.COLOR, replaces));
 			}
-			this.args.add(new Argument(method, parseArgument(arg).get(1), SyntaxValidations.syntaxes.get(method)));
+			this.args.add(new Argument(method, parseArgument(arg).get(1), SyntaxValidations.syntaxes.get(method), unlimited));
 		}
 	}
 	
@@ -112,6 +119,7 @@ public class CommandInformation {
 		if(arg.contains("[") && arg.contains("]")) {
 			boolean start = false;
 			boolean end = false;
+			int dots = 0;
 			for(char c : arg.toCharArray()) {
 				String ch = String.valueOf(c);	
 				HashMap<String,String> replaces = new HashMap<String, String>();
@@ -132,9 +140,13 @@ public class CommandInformation {
 				}
 				if(!start && !end) {
 					method += ch;
-				}else if(start == true && end == false) {
+				} else if(start == true && end == false) {
 					parameters += ch;
 				} else {
+					if(ch.equalsIgnoreCase(".")) {
+						dots++;
+						if(dots <= 3) continue;
+					}
 					replaces.clear();
 					replaces.put("%char%", ch);
 					throw new CommandSyntaxException(Message.CI_ERROR_AT_CHAR.get(TextMode.COLOR, replaces));
@@ -165,7 +177,6 @@ public class CommandInformation {
 	
 	
 	public boolean matches(CommandExecutor sender, String command, String[] args) throws CommandSyntaxException, SyntaxResponseException, ExecutorIncompatibleException {
-		if(this.args.size() != args.length) return false;
 		if(!this.command.equalsIgnoreCase(command)) return false;
 		
 		switch(commandExecutor) {
@@ -182,8 +193,20 @@ public class CommandInformation {
 		}
 		
 		int i = 0; 
+		Argument unlimitedArg = null;
 		while(i < args.length) {
-			Argument exArg = this.args.get(i);
+			Argument exArg = null;
+			try {
+				exArg = this.args.get(i);
+			} catch (IndexOutOfBoundsException e) {
+				if(unlimitedArg == null) {
+				} else {
+					exArg = unlimitedArg;
+				}
+			}
+			if(exArg.isUnlimited()) {
+				unlimitedArg = (Argument) exArg.clone();
+			}
 			String arg = args[i];
 			try {
 				exArg.getHandler().check(exArg.getParameter(), arg);
@@ -192,7 +215,7 @@ public class CommandInformation {
 			}
 			i++;
 		}
-		
+		if(unlimitedArg != null) return true;
 		if(this.args.size() == i) return true;
 		return false;
 	}

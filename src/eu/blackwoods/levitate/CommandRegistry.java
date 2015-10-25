@@ -121,12 +121,12 @@ public class CommandRegistry {
 						try {
 							
 							return playerPassCommand(arg0, arg1, arg2);
-						} catch (CommandSyntaxException | NoPermissionException | SyntaxResponseException e) {
+						} catch (CommandSyntaxException | NoPermissionException | SyntaxResponseException | ExecutorIncompatibleException e) {
 							if(e instanceof NoPermissionException) {
 								arg0.sendMessage(Message.NO_PERMISSION.get(TextMode.COLOR));
 								return true;
 							}
-							if(e instanceof SyntaxResponseException) {
+							if(e instanceof SyntaxResponseException || e instanceof ExecutorIncompatibleException) {
 								arg0.sendMessage(e.getMessage());
 								return true;
 							}
@@ -185,7 +185,8 @@ public class CommandRegistry {
 			}
 			Argument exArg = info.getArgs().get(lastArg);
 			if(exArg == null) continue;
-			complete.addAll(exArg.getHandler().getTabComplete(exArg.getParameter(), arg));
+			List<String> l = exArg.getHandler().getTabComplete(exArg.getParameter(), arg);
+			if(l != null && l.size() > 0) complete.addAll(l);
 		}
 		Iterator<String> iComplete = complete.iterator();
 		while(iComplete.hasNext()) {
@@ -279,12 +280,15 @@ public class CommandRegistry {
 	 * @throws CommandSyntaxException
 	 * @throws SyntaxResponseException
 	 * @throws NoPermissionException
+	 * @throws ExecutorIncompatibleException 
 	 */
-	public boolean playerPassCommand(CommandSender sender, String command, String[]args) throws CommandSyntaxException, NoPermissionException, SyntaxResponseException {
+	public boolean playerPassCommand(CommandSender sender, String command, String[]args) throws CommandSyntaxException, NoPermissionException, SyntaxResponseException, ExecutorIncompatibleException {
 		CommandExecutor ce = CommandExecutor.PLAYER;
 		if(!(sender instanceof Player)) ce = CommandExecutor.CONSOLE;
 		boolean found = false;
 		SyntaxResponseException exeption = null;
+		ExecutorIncompatibleException execIncompatible = null;
+		
 		for(CommandInformation i : commands.keySet()) {
 			if(found == true) continue;
 			try {
@@ -299,14 +303,15 @@ public class CommandRegistry {
 				}
 			} catch (ExecutorIncompatibleException | SyntaxResponseException e) {
 				if(e instanceof ExecutorIncompatibleException) {
-					sender.sendMessage(e.getMessage());
-					found = true;
+					execIncompatible = (ExecutorIncompatibleException) e;
 				} else {
 					exeption = (SyntaxResponseException) e;
 				}
 			}
 		}
-		if(helpMap != null && found == false) {
+		if(found == false && execIncompatible != null) {
+			throw execIncompatible;
+		} else if(helpMap != null && found == false) {
 			helpMap.onHelp(sender, command, args);
 		} else if(helpMap == null && found == false) {
 			throw exeption;

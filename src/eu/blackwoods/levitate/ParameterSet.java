@@ -119,6 +119,44 @@ public class ParameterSet {
 		}
 		return is;
 	}
+	
+	/**
+	 * Get arguments from a to b as String delimited by a space
+	 * @param start Start index 
+	 * @param end End index
+	 * @return
+	 */
+	public String getString(int start, int end) {
+		return getString(start, end, " ");
+	}
+	
+	/**
+	 * Get arguments from a to b as String delimited by entered String
+	 * @param start Start index 
+	 * @param end End index
+	 * @param delimiter Combine Strings with delimiter
+	 * @return
+	 */
+	public String getString(int start, int end, String delimiter) {
+		try {
+			String str = "";
+			for(String s : parameter.subList(start, end)) {
+				str += s + delimiter;
+			}
+			if(str.endsWith(delimiter)) str.substring(0, str.length()-2);
+			return str;
+		} catch (IndexOutOfBoundsException e) { }
+		return null;
+	}
+	
+	/**
+	 * Get arguments from a to the end of all arguments delimited by space
+	 * @param start Start index 
+	 * @return
+	 */
+	public String getMessage(int start) {
+		return getString(start, parameter.size());
+	}
 
 	/**
 	 * Get argument as Object

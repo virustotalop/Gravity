@@ -16,6 +16,7 @@ public enum Message {
 	DEFAULTHELPMAP_NO_COMMANDS("There are no commands like %command%!"),
 	CI_ARG_HAS_TO_START_WITH_CHAR("The argument \"%arg%\" has to start with \"<\"!"),
 	CI_ARG_HAS_TO_END_WITH_CHAR("The argument \"%arg%\" has to start with \">\"!"),
+	CI_ARG_CANNOT_BE_UNLIMITED("The argument \"%arg%\" has to be last argument to be unlimited!"),
 	CI_NO_SYNTAX("There is no syntax for \"%method%\"!"),
 	CI_ERROR_AT_CHAR_IN_ARG("Error at character \"%char%\" in \"%arg%\"!"),
 	CI_ERROR_AT_CHAR("Error at character \"%char%\"!"),

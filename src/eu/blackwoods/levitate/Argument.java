@@ -1,13 +1,15 @@
 package eu.blackwoods.levitate;
 
-public class Argument {
-	
+public class Argument implements Cloneable {
+
 	private String method;
 	private String parameter;
 	private SyntaxHandler handler;
-	
+	private boolean unlimited = false;
+
 	/**
 	 * Only used internal
+	 * 
 	 * @param method
 	 * @param parameter
 	 * @param handler
@@ -16,6 +18,21 @@ public class Argument {
 		this.method = method;
 		this.parameter = parameter;
 		this.handler = handler;
+	}
+
+	/**
+	 * Only used internal
+	 * 
+	 * @param method
+	 * @param parameter
+	 * @param handler
+	 */
+	public Argument(String method, String parameter, SyntaxHandler handler,
+			boolean unlimited) {
+		this.method = method;
+		this.parameter = parameter;
+		this.handler = handler;
+		this.unlimited = unlimited;
 	}
 
 	public String getMethod() {
@@ -41,9 +58,24 @@ public class Argument {
 	public void setHandler(SyntaxHandler handler) {
 		this.handler = handler;
 	}
-	
-	
-	
-	
-	
+
+	public boolean isUnlimited() {
+		return unlimited;
+	}
+
+	public void setUnlimited(boolean unlimited) {
+		this.unlimited = unlimited;
+	}
+
+	protected Object clone() {
+		Argument clone = null;
+		try {
+			clone = (Argument) super.clone();
+		} catch (CloneNotSupportedException e) {
+			e.printStackTrace();
+		}
+		return clone;
+
+	}
+
 }
