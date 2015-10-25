@@ -16,5 +16,12 @@ public interface SyntaxHandler {
 	 */
 	public void check(String parameter, String passed) throws CommandSyntaxException, SyntaxResponseException;
 	
+	/**
+	 * Return every possible value for your syntax.
+	 * You don't need to filter or sort it.
+	 * @param parameter The parameters of the syntax
+	 * @param passed The value passed by the user
+	 * @return
+	 */
 	public List<String> getTabComplete(String parameter, String passed);
 }
