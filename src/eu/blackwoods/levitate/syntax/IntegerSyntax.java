@@ -1,6 +1,7 @@
 package eu.blackwoods.levitate.syntax;
 
 import java.util.HashMap;
+import java.util.List;
 
 import eu.blackwoods.levitate.Message;
 import eu.blackwoods.levitate.Message.TextMode;
@@ -63,6 +64,11 @@ public class IntegerSyntax implements SyntaxHandler {
 			lastIndex+=search.length();
 	    }
 		return i;
+	}
+
+	@Override
+	public List<String> getTabComplete(String parameter, String passed) {
+		return null;
 	}
 
 }

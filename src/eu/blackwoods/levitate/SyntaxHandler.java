@@ -1,5 +1,7 @@
 package eu.blackwoods.levitate;
 
+import java.util.List;
+
 import eu.blackwoods.levitate.exception.CommandSyntaxException;
 import eu.blackwoods.levitate.exception.SyntaxResponseException;
 
@@ -14,4 +16,5 @@ public interface SyntaxHandler {
 	 */
 	public void check(String parameter, String passed) throws CommandSyntaxException, SyntaxResponseException;
 	
+	public List<String> getTabComplete(String parameter, String passed);
 }

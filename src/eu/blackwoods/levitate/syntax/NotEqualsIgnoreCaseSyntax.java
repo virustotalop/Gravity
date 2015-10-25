@@ -1,6 +1,7 @@
 package eu.blackwoods.levitate.syntax;
 
 import java.util.HashMap;
+import java.util.List;
 
 import eu.blackwoods.levitate.Message;
 import eu.blackwoods.levitate.Message.TextMode;
@@ -15,6 +16,11 @@ public class NotEqualsIgnoreCaseSyntax implements SyntaxHandler {
 		replaces.put("%arg%", passed);
 		replaces.put("%value%", parameter);
 		if(parameter.equalsIgnoreCase(passed)) throw new SyntaxResponseException(Message.NOTEQUALSIGNORECASESYNTAX_CANNOT_EQUAL.get(TextMode.COLOR, replaces));
+	}
+
+	@Override
+	public List<String> getTabComplete(String parameter, String passed) {
+		return null;
 	}
 
 }

@@ -1,9 +1,12 @@
 package eu.blackwoods.levitate.syntax;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.entity.Player;
 
 import eu.blackwoods.levitate.Message;
 import eu.blackwoods.levitate.Message.TextMode;
@@ -24,6 +27,14 @@ public class PlayerSyntax implements SyntaxHandler {
 		} else if(parameter.equalsIgnoreCase("offline")) {
 			if(p.isOnline()) throw new SyntaxResponseException(Message.PLAYERSYNTAX_PLAYER_ONLINE.get(TextMode.COLOR, replaces));
 		}
+	}
+	
+	@Override
+	public List<String> getTabComplete(String parameter, String passed) {
+		List<String> playerList = new ArrayList<String>();
+		for(Player p : Bukkit.getOnlinePlayers())
+			playerList.add(p.getName());
+		return playerList;
 	}
 
 }

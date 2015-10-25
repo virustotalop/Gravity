@@ -1,6 +1,9 @@
 package eu.blackwoods.levitate.syntax;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 
 import eu.blackwoods.levitate.Message;
 import eu.blackwoods.levitate.Message.TextMode;
@@ -17,4 +20,8 @@ public class EqualsSyntax implements SyntaxHandler {
 		if(!parameter.equals(passed)) throw new SyntaxResponseException(Message.EQUALSSYNTAX_DOESNT_EQUAL.get(TextMode.COLOR, replaces));
 	}
 
+	@Override
+	public List<String> getTabComplete(String parameter, String passed) {
+		return new ArrayList<String>(Arrays.asList(parameter));
+	}
 }

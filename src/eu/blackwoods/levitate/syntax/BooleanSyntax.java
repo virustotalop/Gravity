@@ -1,6 +1,8 @@
 package eu.blackwoods.levitate.syntax;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import eu.blackwoods.levitate.Message;
 import eu.blackwoods.levitate.Message.TextMode;
@@ -8,24 +10,39 @@ import eu.blackwoods.levitate.SyntaxHandler;
 import eu.blackwoods.levitate.exception.SyntaxResponseException;
 
 public class BooleanSyntax implements SyntaxHandler {
-
+	
+	private List<String> values = new ArrayList<String>();
+	
+	public BooleanSyntax() {
+		loadValues();
+	}
+	
+	private void loadValues() {
+		values.add("true");
+		values.add("false");
+		values.add("0");
+		values.add("1");
+		values.add("on");
+		values.add("off");
+		values.add("an");
+		values.add("aus");
+		values.add("ja");
+		values.add("nein");
+		values.add("yes");
+		values.add("no");
+		values.add("enable");
+		values.add("disable");
+	}
+	
 	@Override
 	public void check(String parameter, final String passed) throws SyntaxResponseException {
-		if(passed.equalsIgnoreCase("true")) return;
-		if(passed.equalsIgnoreCase("false")) return;
-		if(passed.equalsIgnoreCase("0")) return;
-		if(passed.equalsIgnoreCase("1")) return;
-		if(passed.equalsIgnoreCase("on")) return;
-		if(passed.equalsIgnoreCase("off")) return;
-		if(passed.equalsIgnoreCase("an")) return;
-		if(passed.equalsIgnoreCase("aus")) return;
-		if(passed.equalsIgnoreCase("ja")) return;
-		if(passed.equalsIgnoreCase("nein")) return;
-		if(passed.equalsIgnoreCase("yes")) return;
-		if(passed.equalsIgnoreCase("no")) return;
-		if(passed.equalsIgnoreCase("enable")) return;
-		if(passed.equalsIgnoreCase("disable")) return;
+		if(values.contains(passed.toLowerCase())) return;
 		throw new SyntaxResponseException(Message.BOOLEANSYNTAX_HAS_TO_BE_BOOLEAN.get(TextMode.COLOR, new HashMap<String, String>(){{put("%arg%", passed);}}));
+	}
+
+	@Override
+	public List<String> getTabComplete(String parameter, String passed) {
+		return new ArrayList<String>(values);
 	}
 
 }

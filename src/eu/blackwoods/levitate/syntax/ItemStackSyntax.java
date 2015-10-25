@@ -5,7 +5,9 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
@@ -108,6 +110,11 @@ public class ItemStackSyntax implements SyntaxHandler {
 			return true;
 		} catch (Exception e) { }
 		return false;
+	}
+
+	@Override
+	public List<String> getTabComplete(String parameter, String passed) {
+		return new ArrayList<String>(){{addAll(items.keySet());}};
 	}
 	
 }

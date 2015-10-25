@@ -36,4 +36,16 @@ public class ChoiceSyntax implements SyntaxHandler {
 		
 	}
 
+	@Override
+	public List<String> getTabComplete(String parameter, String passed) {
+		Pattern p = Pattern.compile(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)");
+		Matcher m = p.matcher(parameter);
+		String[] ch = parameter.split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)");
+		List<String> choices = new ArrayList<String>();
+		for(String s : ch) {
+			choices.add(s.toLowerCase());
+		}
+		return choices;
+	}
+
 }

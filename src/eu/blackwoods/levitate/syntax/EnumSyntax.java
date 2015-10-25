@@ -1,7 +1,9 @@
 package eu.blackwoods.levitate.syntax;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import eu.blackwoods.levitate.CommandRegistry;
 import eu.blackwoods.levitate.Message;
@@ -50,6 +52,18 @@ public class EnumSyntax implements SyntaxHandler {
 			count++;
 		}
 		return i;
+	}
+
+	@Override
+	public List<String> getTabComplete(String parameter, String passed) {
+		List<String> complete = new ArrayList<String>();
+		try {
+			Class<?> cls = Class.forName(parameter);
+			for(Field f : cls.getFields()) {
+				complete.add(correctCase(f.getName()));
+			}
+		} catch (ClassNotFoundException e2) { }
+		return complete;
 	}
 
 }

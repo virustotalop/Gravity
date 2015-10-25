@@ -3,7 +3,10 @@ package eu.blackwoods.levitate;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 
 import org.bukkit.command.Command;
@@ -106,6 +109,13 @@ public class CommandRegistry {
 	            CommandMap cmap = (CommandMap)f.get(getPlugin().getServer());
 	            cmap.register(info.getCommand(), new Command(info.getCommand(), info.getDescription(), info.getSyntax(), new ArrayList<String>(Arrays.asList(aliases))) {
 					
+	            	@Override
+	            	public List<String> tabComplete(CommandSender sender, String alias, String[] args) throws IllegalArgumentException {
+	            		List<String> complete = handleTabComplete(sender, alias, args);
+	            		if(complete == null) return super.tabComplete(sender, alias, args);
+	            		return complete;
+	            	}
+	            	
 					@Override
 					public boolean execute(CommandSender arg0, String arg1, String[] arg2) {
 						try {
@@ -134,6 +144,61 @@ public class CommandRegistry {
 			}
 			
 		}
+	}
+	
+	/**
+	 * Get strings which fit the entered argument
+	 * @param sender CommandSender
+	 * @param command Base-Command or alias
+	 * @param args
+	 * @return List of strings which could fit the entered argument
+	 */
+	private List<String> handleTabComplete(CommandSender sender, String command, String[] args) {
+		if(args.length == 0) return null;
+		List<String> complete = new ArrayList<String>();
+		int lastArg = args.length-1;
+		String arg = args[lastArg];
+		CommandExecutor ce = CommandExecutor.PLAYER;
+		if(!(sender instanceof Player)) ce = CommandExecutor.CONSOLE;
+		
+		for(CommandInformation info : commands.keySet()) {
+			if(!info.getCommand().equalsIgnoreCase(command)) continue;
+			if(permissionHandler != null && info.getPermission() != null) {
+				if(!permissionHandler.hasPermission(sender, info.getPermission())) {
+					continue;
+				}
+			}
+			CommandExecutor cmdExec = null;
+			if(sender instanceof Player) {
+				cmdExec = CommandExecutor.PLAYER;
+			} else {
+				cmdExec = CommandExecutor.CONSOLE;
+			}
+			
+			switch(info.getCommandExecutor()) {
+			case CONSOLE:
+				if(cmdExec != CommandExecutor.CONSOLE) continue;
+				break;
+			case PLAYER:
+				if(cmdExec != CommandExecutor.PLAYER) continue;
+				break;
+			}
+			Argument exArg = info.getArgs().get(lastArg);
+			if(exArg == null) continue;
+			complete.addAll(exArg.getHandler().getTabComplete(exArg.getParameter(), arg));
+		}
+		Iterator<String> iComplete = complete.iterator();
+		while(iComplete.hasNext()) {
+			String str = iComplete.next();
+			if(!str.toLowerCase().startsWith(arg.toLowerCase())) iComplete.remove();
+		}
+		Collections.sort(complete, new Comparator<String>() {
+	        @Override
+	        public int compare(String s1, String s2) {
+	            return s1.compareToIgnoreCase(s2);
+	        }
+	    });	
+		return complete;
 	}
 	
 	/**
@@ -215,10 +280,13 @@ public class CommandRegistry {
 	 * @throws SyntaxResponseException
 	 * @throws NoPermissionException
 	 */
-	public boolean playerPassCommand(CommandSender sender, String command, String[]args) throws CommandSyntaxException, SyntaxResponseException, NoPermissionException {
+	public boolean playerPassCommand(CommandSender sender, String command, String[]args) throws CommandSyntaxException, NoPermissionException, SyntaxResponseException {
+		CommandExecutor ce = CommandExecutor.PLAYER;
+		if(!(sender instanceof Player)) ce = CommandExecutor.CONSOLE;
+		boolean found = false;
+		SyntaxResponseException exeption = null;
 		for(CommandInformation i : commands.keySet()) {
-			CommandExecutor ce = CommandExecutor.PLAYER;
-			if(!(sender instanceof Player)) ce = CommandExecutor.CONSOLE;
+			if(found == true) continue;
 			try {
 				if(i.matches(ce, command, args)) {
 					if(permissionHandler != null && i.getPermission() != null) {
@@ -227,15 +295,23 @@ public class CommandRegistry {
 						}
 					}
 					commands.get(i).execute(sender, command, new ParameterSet(args));
-					return true;
+					found = true;
 				}
-			} catch (ExecutorIncompatibleException e) {
-				sender.sendMessage(e.getMessage());
-				return true;
+			} catch (ExecutorIncompatibleException | SyntaxResponseException e) {
+				if(e instanceof ExecutorIncompatibleException) {
+					sender.sendMessage(e.getMessage());
+					found = true;
+				} else {
+					exeption = (SyntaxResponseException) e;
+				}
 			}
 		}
-		if(helpMap != null) helpMap.onHelp(sender, command, args);
-		return false;
+		if(helpMap != null && found == false) {
+			helpMap.onHelp(sender, command, args);
+		} else if(helpMap == null && found == false) {
+			throw exeption;
+		}
+		return found;
 	}
 	
 	public static boolean existClass(String clazz) {

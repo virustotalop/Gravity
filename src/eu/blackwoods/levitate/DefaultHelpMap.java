@@ -2,9 +2,6 @@ package eu.blackwoods.levitate;
 
 import java.util.HashMap;
 
-
-
-
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 

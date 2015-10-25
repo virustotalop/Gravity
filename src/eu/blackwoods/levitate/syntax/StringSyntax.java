@@ -1,6 +1,7 @@
 package eu.blackwoods.levitate.syntax;
 
 import java.util.HashMap;
+import java.util.List;
 
 import eu.blackwoods.levitate.Message;
 import eu.blackwoods.levitate.Message.TextMode;
@@ -48,6 +49,11 @@ public class StringSyntax implements SyntaxHandler {
 			if(!c.equals(c.toUpperCase())) return false;
 		}
 		return true;
+	}
+
+	@Override
+	public List<String> getTabComplete(String parameter, String passed) {
+		return null;
 	}
 	
 }
