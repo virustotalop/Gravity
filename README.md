@@ -30,6 +30,7 @@ registry.register(new CommandInformation("/kill <player[online]>", "kill.player"
 * Bukkit/Spigot-Version independent
 * HelpMap with detailed Command-List
 * TabComplete
+* Undefined amount of arguments
 * Extendable
 
 #Getting started
@@ -37,8 +38,9 @@ Please check [the wiki](https://github.com/KennethWussmann/Levitate/wiki) to get
 
 #Planned features
 * ~~HelpMap with detailed Command-List~~ Added in [v1.1.0](https://github.com/KennethWussmann/Levitate/releases/tag/v1.1.0)
-* Commands with undefined amount of arguments
+* ~~Commands with undefined amount of arguments~~ Added in [v1.3.0](https://github.com/KennethWussmann/Levitate/releases/tag/v1.3.0)
 * ~~TabComplete~~ Added in [v1.2.0](https://github.com/KennethWussmann/Levitate/releases/tag/v1.2.0)
+* Let me know your ideas :smile:
 
 #License
 Levitate is licensed under [GNU General Public License Version 2](https://github.com/KennethWussmann/Levitate/blob/master/LICENSE).
