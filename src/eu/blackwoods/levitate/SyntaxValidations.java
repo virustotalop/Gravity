@@ -21,6 +21,7 @@ import eu.blackwoods.levitate.syntax.NotEqualsIgnoreCaseSyntax;
 import eu.blackwoods.levitate.syntax.NotEqualsSyntax;
 import eu.blackwoods.levitate.syntax.PlayerSyntax;
 import eu.blackwoods.levitate.syntax.StringSyntax;
+import eu.blackwoods.levitate.syntax.WildcardSyntax;
 
 public class SyntaxValidations {
 	
@@ -42,6 +43,7 @@ public class SyntaxValidations {
 		registerSyntax("choice", new ChoiceSyntax());
 		registerSyntax("player", new PlayerSyntax());
 		registerSyntax("item", new ItemStackSyntax(plugin));
+		registerSyntax("*", new WildcardSyntax());
 	}
 	
 	/**
