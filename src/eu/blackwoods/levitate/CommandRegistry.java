@@ -183,7 +183,13 @@ public class CommandRegistry {
 				if(cmdExec != CommandExecutor.PLAYER) continue;
 				break;
 			}
-			Argument exArg = info.getArgs().get(lastArg);
+			Argument exArg = null;
+			try {
+				exArg = info.getArgs().get(lastArg);
+			} catch (IndexOutOfBoundsException e) {
+				exArg = info.getArgs().get(info.getArgs().size()-1);
+				if(!exArg.isUnlimited()) e.printStackTrace();
+			}
 			if(exArg == null) continue;
 			List<String> l = exArg.getHandler().getTabComplete(exArg.getParameter(), arg);
 			if(l != null && l.size() > 0) complete.addAll(l);
