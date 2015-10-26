@@ -10,6 +10,7 @@ import java.util.regex.Pattern;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import eu.blackwoods.levitate.syntax.BooleanSyntax;
+import eu.blackwoods.levitate.syntax.ChoiceIgnoreCaseSyntax;
 import eu.blackwoods.levitate.syntax.ChoiceSyntax;
 import eu.blackwoods.levitate.syntax.DoubleSyntax;
 import eu.blackwoods.levitate.syntax.EnumSyntax;
@@ -21,7 +22,9 @@ import eu.blackwoods.levitate.syntax.NotEqualsIgnoreCaseSyntax;
 import eu.blackwoods.levitate.syntax.NotEqualsSyntax;
 import eu.blackwoods.levitate.syntax.PlayerSyntax;
 import eu.blackwoods.levitate.syntax.StringSyntax;
+import eu.blackwoods.levitate.syntax.URLSyntax;
 import eu.blackwoods.levitate.syntax.WildcardSyntax;
+import eu.blackwoods.levitate.syntax.WorldSyntax;
 
 public class SyntaxValidations {
 	
@@ -41,9 +44,12 @@ public class SyntaxValidations {
 		registerSyntax("neqi", new NotEqualsIgnoreCaseSyntax());
 		registerSyntax("enum", new EnumSyntax());
 		registerSyntax("choice", new ChoiceSyntax());
+		registerSyntax("choicei", new ChoiceIgnoreCaseSyntax());
 		registerSyntax("player", new PlayerSyntax());
 		registerSyntax("item", new ItemStackSyntax(plugin));
 		registerSyntax("*", new WildcardSyntax());
+		registerSyntax("world", new WorldSyntax());
+		registerSyntax("url", new URLSyntax());
 	}
 	
 	/**

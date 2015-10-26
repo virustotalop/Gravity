@@ -317,10 +317,10 @@ public class CommandRegistry {
 		}
 		if(found == false && execIncompatible != null) {
 			throw execIncompatible;
+		} else if(exeption != null && found == false) {
+			throw exeption;
 		} else if(helpMap != null && found == false) {
 			helpMap.onHelp(sender, command, args);
-		} else if(helpMap == null && found == false) {
-			throw exeption;
 		}
 		return found;
 	}

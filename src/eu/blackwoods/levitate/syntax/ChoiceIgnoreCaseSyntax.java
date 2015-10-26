@@ -12,7 +12,7 @@ import eu.blackwoods.levitate.SyntaxHandler;
 import eu.blackwoods.levitate.exception.CommandSyntaxException;
 import eu.blackwoods.levitate.exception.SyntaxResponseException;
 
-public class ChoiceSyntax implements SyntaxHandler {
+public class ChoiceIgnoreCaseSyntax implements SyntaxHandler {
 
 	@Override
 	public void check(String parameter, String passed) throws SyntaxResponseException, CommandSyntaxException {
@@ -27,12 +27,12 @@ public class ChoiceSyntax implements SyntaxHandler {
 		String strList = "";
 		for(String s : ch) {
 			strList += s+", ";
-			choices.add(s);
+			choices.add(s.toLowerCase());
 		}
 		strList = strList.substring(0,strList.length()-2);
 		replaces.put("%arg%", passed);
 		replaces.put("%list%", strList);
-		if(!choices.contains(passed)) throw new SyntaxResponseException(Message.CHOICESYNTAX_NOT_IN_LIST.get(TextMode.COLOR, replaces));
+		if(!choices.contains(passed.toLowerCase())) throw new SyntaxResponseException(Message.CHOICESYNTAX_NOT_IN_LIST.get(TextMode.COLOR, replaces));
 		
 	}
 
@@ -43,7 +43,7 @@ public class ChoiceSyntax implements SyntaxHandler {
 		String[] ch = parameter.split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)");
 		List<String> choices = new ArrayList<String>();
 		for(String s : ch) {
-			choices.add(s);
+			choices.add(s.toLowerCase());
 		}
 		return choices;
 	}

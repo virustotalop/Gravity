@@ -51,7 +51,11 @@ public enum Message {
 	STRINGSYNTAX_ONLY_UPPERCASE("Argument \"%arg%\" has to contain only upper-case letters!"),
 	ITEMSTACKSYNTAX_NO_INTEGER("Argument \"%arg%\" has to be an item separated by \":\"!"),
 	ITEMSTACKSYNTAX_POSITIVE_INTEGER("Number \"%int%\" has to be positive or zero!"),
-	ITEMSTACKSYNTAX_ITEM_NOT_FOUND("Item \"%arg%\" doesn't exist!");
+	ITEMSTACKSYNTAX_ITEM_NOT_FOUND("Item \"%arg%\" doesn't exist!"),
+	WORLDSYNTAX_WORLD_DOES_NOT_EXIST("The world \"%world%\" doesn't exist!"),
+	URLSYNTAX_URL_MALFORMED("The argument \"%arg%\" has to be an URL!"),
+	URLSYNTAX_DOES_NOT_START_WITH("The url \"%arg%\" has to start with \"%parameter%\"!");
+	
 	
 	String message;
 	

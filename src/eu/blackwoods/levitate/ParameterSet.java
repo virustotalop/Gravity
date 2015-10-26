@@ -1,11 +1,14 @@
 package eu.blackwoods.levitate;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -158,6 +161,29 @@ public class ParameterSet {
 		return getString(start, parameter.size());
 	}
 
+	/**
+	 * Get argument as world
+	 * @param i The index in your command, starts at 0
+	 * @return
+	 */
+	public World getWorld(int i) {
+		return Bukkit.getWorld(parameter.get(i));
+	}
+	
+	/**
+	 * Get argument as URL
+	 * @param i The index in your command, starts at 0
+	 * @return
+	 */
+	public URL getURL(int i) {
+		try {
+			return new URL(parameter.get(i));
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
 	/**
 	 * Get argument as Object
 	 * @param i The index in your command, starts at 0
