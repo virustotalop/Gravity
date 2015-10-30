@@ -59,22 +59,27 @@
    <build>
       <plugins>
          <plugin>
-            <groupId>org.sonatype.plugins</groupId>
-            <artifactId>nexus-staging-maven-plugin</artifactId>
-            <version>1.5.1</version>
+            <artifactId>maven-compiler-plugin</artifactId>
+            <version>2.5.1</version>
             <executions>
                <execution>
-                  <id>default-deploy</id>
-                  <phase>deploy</phase>
+                  <id>default-compile</id>
+                  <phase>compile</phase>
                   <goals>
-                     <goal>deploy</goal>
+                     <goal>compile</goal>
+                  </goals>
+               </execution>
+               <execution>
+                  <id>default-testCompile</id>
+                  <phase>test-compile</phase>
+                  <goals>
+                     <goal>testCompile</goal>
                   </goals>
                </execution>
             </executions>
             <configuration>
-               <serverId>deployment</serverId>
-               <nexusUrl>http://repo.ketrwu.de/</nexusUrl>
-               <skipStaging>true</skipStaging>
+               <source>1.8</source>
+               <target>1.8</target>
             </configuration>
          </plugin>
       </plugins>
