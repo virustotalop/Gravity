@@ -1,2 +1,8 @@
 language: java
 jdk: oraclejdk8
+env:
+  global:
+    - SONATYPE_USERNAME=deployment
+    - secure: V/J9NC/LnSTd4aUD0L1rco1fe/Fmlwv8/Y2wG1rIvoddS10y3MUimDnJZNOYVCVLXn0RoJLuAWu92xAVy+GCxaIQemyCkm2ZtUVnW94KpK674PBs5B5ow3EWdUNt/BTNwXPjeF0opnR/zKg5UP/V6ricRk2mMd7R+Jdbm1dnO7tU3B/WMTiy3VOICY0vUXvSnOzmwMxiIa7qa43CtzUOLIDnz+48xjp6yXLL7t34vNKmzsfhhUVqJmdO2UyyTb92SSFBgFKmfqlUXKZwIKBf57Re/xU6W+Etz8WiqpIgcZO/5hNkdJSUT/X2dUM5aeC7y3yjwexkSaTU+60t+y6r/bUphTLihhOxFcGxQRyULy5ku7P8QuTkpqzt1ds6ptxdGjcMtA7Rxh8nViHyqlFdlRz7N4xxMKbHGeUl/bCDi7vR4De30rT5fNy/JlS8AqzBu9j8fX4Q2U2gRplYGuM7TaiSYu/JFMQSjCLyZjVoSxXqhAFi8hYKzWWg2D1KxNgF35yGbQLhaS6855gVbW7k6AvvHE0mjQrfzRkwF4Xrt6tsQFZL6vyxGHjZCFUGj3SqPqMyxsE9v2I8Qe9+nDahvE9ysZM1DpM8eZK4sP+ixUQgdUboNvn2jxEOq4A2++giYLo44yRbstvaYkJD6lHribwlREM+q2voJwVmwSlYrQk=
+after_success:
+  - "[[ $TRAVIS_BRANCH == \"master\" ]] && { python travis/addServer.py; mvn clean deploy --settings ~/.m2/mySettings.xml; };"
