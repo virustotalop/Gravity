@@ -15,9 +15,9 @@
    </licenses>
    <developers>
       <developer>
-         <name>Kenneth Wuﬂmann</name>
+         <name>Kenneth Wu√ümann</name>
          <email>contact@ketrwu.de</email>
-         <organization>Kenneth Wuﬂmann</organization>
+         <organization>Kenneth Wu√ümann</organization>
          <organizationUrl>http://ketrwu.de/</organizationUrl>
       </developer>
    </developers>
@@ -77,6 +77,7 @@
                <skipStaging>true</skipStaging>
             </configuration>
          </plugin>
+		 <!-- Removed for Travis-Ci
          <plugin>
             <artifactId>maven-compiler-plugin</artifactId>
             <version>2.5.1</version>
@@ -101,6 +102,7 @@
                <target>1.8</target>
             </configuration>
          </plugin>
+		 --->
       </plugins>
       <finalName>${project.name}-${project.version}-${timestamp}</finalName>
    </build>
