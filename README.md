@@ -1,6 +1,5 @@
-# Levitate [![Build Status](https://travis-ci.org/KennethWussmann/Levitate.svg?branch=master)](https://travis-ci.org/KennethWussmann/Levitate)
-Levitate is an awesome and easy to use Command-Library for Bukkit/Spigot-Plugins.<br>
-It allowes you to register commands with arguments, permissions, TabCompletion and description in seconds. There also is no need to register it in the plugin.yml.
+#Gravity
+Gravity is a command framework that is based on [Levitate](https://github.com/KennethWussmann/Levitate). Gravity allows each plugin to create their own instance Levitate. Levitate allows you to register commands easily along with tab completion for arguments. Documentation pending for Gravity, below is how a command was registered with Levitate.
 
 #Example
 This is a simple kill command:
@@ -33,14 +32,9 @@ registry.register(new CommandInformation("/kill <player[online]>", "kill.player"
 * Undefined amount of arguments
 * Extendable
 
-#Getting started
-Please check [the wiki](https://github.com/KennethWussmann/Levitate/wiki) to get started!
-
 #Planned features
-* ~~HelpMap with detailed Command-List~~ Added in [v1.1.0](https://github.com/KennethWussmann/Levitate/releases/tag/v1.1.0)
-* ~~Commands with undefined amount of arguments~~ Added in [v1.3.0](https://github.com/KennethWussmann/Levitate/releases/tag/v1.3.0)
-* ~~TabComplete~~ Added in [v1.2.0](https://github.com/KennethWussmann/Levitate/releases/tag/v1.2.0)
-* Let me know your ideas :smile:
+* Further abstract command registering.
+* Build Gravity into a larger framework for other uses.
 
 #License
-Levitate is licensed under [GNU General Public License Version 2](https://github.com/KennethWussmann/Levitate/blob/master/LICENSE).
+Gravity & Levitate are licensed under [GNU General Public License Version 2](https://github.com/virustotalop/Gravity/blob/master/LICENSE).
