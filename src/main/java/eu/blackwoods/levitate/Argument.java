@@ -14,7 +14,8 @@ public class Argument implements Cloneable {
 	 * @param parameter
 	 * @param handler
 	 */
-	public Argument(String method, String parameter, SyntaxHandler handler) {
+	public Argument(String method, String parameter, SyntaxHandler handler) 
+	{
 		this.method = method;
 		this.parameter = parameter;
 		this.handler = handler;
@@ -27,55 +28,65 @@ public class Argument implements Cloneable {
 	 * @param parameter
 	 * @param handler
 	 */
-	public Argument(String method, String parameter, SyntaxHandler handler,
-			boolean unlimited) {
+	public Argument(String method, String parameter, SyntaxHandler handler,boolean unlimited) 
+	{
 		this.method = method;
 		this.parameter = parameter;
 		this.handler = handler;
 		this.unlimited = unlimited;
 	}
 
-	public String getMethod() {
-		return method;
+	public String getMethod() 
+	{
+		return this.method;
 	}
 
-	public void setMethod(String method) {
+	public void setMethod(String method) 
+	{
 		this.method = method;
 	}
 
-	public String getParameter() {
+	public String getParameter() 
+	{
 		return parameter;
 	}
 
-	public void setParameter(String parameter) {
+	public void setParameter(String parameter) 
+	{
 		this.parameter = parameter;
 	}
 
-	public SyntaxHandler getHandler() {
+	public SyntaxHandler getHandler() 
+	{
 		return handler;
 	}
 
-	public void setHandler(SyntaxHandler handler) {
+	public void setHandler(SyntaxHandler handler) 
+	{
 		this.handler = handler;
 	}
 
-	public boolean isUnlimited() {
+	public boolean isUnlimited() 
+	{
 		return unlimited;
 	}
 
-	public void setUnlimited(boolean unlimited) {
+	public void setUnlimited(boolean unlimited) 
+	{
 		this.unlimited = unlimited;
 	}
 
-	protected Object clone() {
+	protected Object clone() 
+	{
 		Argument clone = null;
-		try {
+		try 
+		{
 			clone = (Argument) super.clone();
-		} catch (CloneNotSupportedException e) {
+		} 
+		catch (CloneNotSupportedException e) 
+		{
 			e.printStackTrace();
 		}
 		return clone;
-
 	}
-
 }

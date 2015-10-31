@@ -59,13 +59,16 @@ public enum Message {
 	
 	String message;
 	
-	Message(String message) {
+	Message(String message) 
+	{
 		this.message = message;
 	}
 	
-	public String get(TextMode mode) {
-		String raw = message;
-		switch(mode) {
+	public String get(TextMode mode) 
+	{
+		String raw = this.message;
+		switch(mode) 
+		{
 		case COLOR:
 			return ChatColor.translateAlternateColorCodes('&', raw);
 		case PLAIN:
@@ -76,14 +79,16 @@ public enum Message {
 		return raw;
 	}
 	
-	public String get(TextMode mode, HashMap<String, String> replaces) {
+	public String get(TextMode mode, HashMap<String, String> replaces) 
+	{
 		String message = get(mode);
 		for(String key : replaces.keySet()) 
 			message = message.replace(key, replaces.get(key));
 		return message;
 	}
 	
-	public enum TextMode {
+	public enum TextMode 
+	{
 		RAW, PLAIN, COLOR
 	}
 }

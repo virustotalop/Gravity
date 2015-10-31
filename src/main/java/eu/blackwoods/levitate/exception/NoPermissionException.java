@@ -1,19 +1,26 @@
 package eu.blackwoods.levitate.exception;
 
 public class NoPermissionException extends Exception {
-	public NoPermissionException() {
+
+	private static final long serialVersionUID = 2130857347420726232L;
+
+	public NoPermissionException() 
+	{
 		super();
 	}
 
-	public NoPermissionException(String message) {
+	public NoPermissionException(String message) 
+	{
 		super(message);
 	}
 
-	public NoPermissionException(String message, Throwable cause) {
+	public NoPermissionException(String message, Throwable cause) 
+	{
 		super(message, cause);
 	}
 
-	public NoPermissionException(Throwable cause) {
+	public NoPermissionException(Throwable cause) 
+	{
 		super(cause);
 	}
 }

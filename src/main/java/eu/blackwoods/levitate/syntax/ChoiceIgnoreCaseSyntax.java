@@ -15,7 +15,8 @@ import eu.blackwoods.levitate.exception.SyntaxResponseException;
 public class ChoiceIgnoreCaseSyntax implements SyntaxHandler {
 
 	@Override
-	public void check(String parameter, String passed) throws SyntaxResponseException, CommandSyntaxException {
+	public void check(String parameter, String passed) throws SyntaxResponseException, CommandSyntaxException 
+	{
 		HashMap<String, String> replaces = new HashMap<String, String>();
 		replaces.put("%arg%", parameter);
 		if(parameter.equals("")) throw new CommandSyntaxException(Message.CHOICESYNTAX_NOT_LIST.get(TextMode.COLOR, replaces));
@@ -25,7 +26,8 @@ public class ChoiceIgnoreCaseSyntax implements SyntaxHandler {
 		String[] ch = parameter.split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)");
 		List<String> choices = new ArrayList<String>();
 		String strList = "";
-		for(String s : ch) {
+		for(String s : ch) 
+		{
 			strList += s+", ";
 			choices.add(s.toLowerCase());
 		}
@@ -37,7 +39,8 @@ public class ChoiceIgnoreCaseSyntax implements SyntaxHandler {
 	}
 
 	@Override
-	public List<String> getTabComplete(String parameter, String passed) {
+	public List<String> getTabComplete(String parameter, String passed) 
+	{
 		Pattern p = Pattern.compile(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)");
 		Matcher m = p.matcher(parameter);
 		String[] ch = parameter.split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)");

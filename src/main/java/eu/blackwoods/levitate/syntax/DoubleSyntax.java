@@ -17,15 +17,24 @@ public class DoubleSyntax implements SyntaxHandler {
 		replaces.put("%arg%", passed);
 		if(!isDouble(passed)) throw new SyntaxResponseException(Message.DOUBLESYNTAX_HAS_NO_DOUBLE.get(TextMode.COLOR, replaces));
 		double parsedDouble = Double.parseDouble(passed);
-		if(parameter.equals("+")) {
-			if(parsedDouble < 0 && parsedDouble != 0) throw new SyntaxResponseException(Message.DOUBLESYNTAX_HAS_TO_BE_POSITIVE_ZERO.get(TextMode.COLOR, replaces));
-		} else if(parameter.equals("-")) {
-			if(parsedDouble > 0 && parsedDouble != 0) throw new SyntaxResponseException(Message.DOUBLESYNTAX_HAS_TO_BE_NEGATIVE_ZERO.get(TextMode.COLOR, replaces));
-		} else if(parameter.contains("-")) {
+		if(parameter.equals("+")) 
+		{
+			if(parsedDouble < 0 && parsedDouble != 0) 
+				throw new SyntaxResponseException(Message.DOUBLESYNTAX_HAS_TO_BE_POSITIVE_ZERO.get(TextMode.COLOR, replaces));
+		} 
+		else if(parameter.equals("-")) 
+		{
+			if(parsedDouble > 0 && parsedDouble != 0) 
+				throw new SyntaxResponseException(Message.DOUBLESYNTAX_HAS_TO_BE_NEGATIVE_ZERO.get(TextMode.COLOR, replaces));
+		} 
+		else if(parameter.contains("-")) 
+		{
 			replaces.put("%parameter%", parameter);
-			if(!parameter.matches("(-?[0-9]+)-(-?[0-9]+)")) throw new CommandSyntaxException(Message.DOUBLESYNTAX_PARAMETER_MALFORMED.get(TextMode.COLOR, replaces));
-			if(parameter.startsWith("-")) {
-				double a = Double.parseDouble("-"+parameter.split("-", 3)[1]);
+			if(!parameter.matches("(-?[0-9]+)-(-?[0-9]+)"))
+				throw new CommandSyntaxException(Message.DOUBLESYNTAX_PARAMETER_MALFORMED.get(TextMode.COLOR, replaces));
+			if(parameter.startsWith("-")) 
+			{
+				double a = Double.parseDouble("-" + parameter.split("-", 3)[1]);
 				double b = Double.parseDouble(parameter.split("-", 3)[2]);
 				replaces.put("%min%", String.valueOf(a));
 				replaces.put("%max%", String.valueOf(b));

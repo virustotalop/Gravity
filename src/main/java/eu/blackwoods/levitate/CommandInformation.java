@@ -25,11 +25,15 @@ public class CommandInformation {
 	 * Create a CommandInformation for a new command
 	 * @param syntax Your syntax
 	 */
-	public CommandInformation(String syntax) {
+	public CommandInformation(String syntax) 
+	{
 		this.syntax = syntax;
-		try {
+		try 
+		{
 			processSyntax();
-		} catch (CommandSyntaxException e) {
+		} 
+		catch (CommandSyntaxException e) 
+		{
 			e.printStackTrace();
 		}
 	}
@@ -39,12 +43,16 @@ public class CommandInformation {
 	 * @param syntax Your syntax
 	 * @param permission Your new permission
 	 */
-	public CommandInformation(String syntax, String permission) {
+	public CommandInformation(String syntax, String permission) 
+	{
 		this.permission = permission;
 		this.syntax = syntax;
-		try {
+		try 
+		{
 			processSyntax();
-		} catch (CommandSyntaxException e) {
+		} 
+		catch (CommandSyntaxException e) 
+		{
 			e.printStackTrace();
 		}
 	}
@@ -55,27 +63,34 @@ public class CommandInformation {
 	 * @param permission Your new permission
 	 * @param description Your description of your command
 	 */
-	public CommandInformation(String syntax, String permission, String description) {
+	public CommandInformation(String syntax, String permission, String description) 
+	{
 		this.permission = permission;
 		this.syntax = syntax;
 		this.description = description;
-		try {
+		try 
+		{
 			processSyntax();
-		} catch (CommandSyntaxException e) {
+		} catch (CommandSyntaxException e) 
+		{
 			e.printStackTrace();
 		}
 	}
 	
-	private void processSyntax() throws CommandSyntaxException {
+	private void processSyntax() throws CommandSyntaxException 
+	{
 		
-		if(!syntax.contains(" ")) {
-			processCommandBase(syntax);
+		if(!this.syntax.contains(" ")) 
+		{
+			processCommandBase(this.syntax);
 			return;
 		}
 		Iterator<MatchResult> matches = SyntaxValidations.allMatches(Pattern.compile("<([^>]*)>|([\\/|\\?|\\$][.^\\w]*)"), syntax).iterator();
-		while(matches.hasNext()) {
+		while(matches.hasNext()) 
+		{
 			String arg = matches.next().group();
-			if(arg.startsWith("$")|arg.startsWith("?")|arg.startsWith("/")) {
+			if(arg.startsWith("$")|arg.startsWith("?")|arg.startsWith("/")) 
+			{
 				processCommandBase(arg);
 				continue;
 			}
@@ -87,12 +102,14 @@ public class CommandInformation {
 			arg = arg.substring(1, arg.length()-1);
 			String method = parseArgument(arg).get(0);
 			boolean unlimited = false;
-			if(method.endsWith("...")) {
+			if(method.endsWith("...")) 
+			{
 				if(matches.hasNext()) throw new CommandSyntaxException(Message.CI_ARG_CANNOT_BE_UNLIMITED.get(TextMode.COLOR, replaces));
 				unlimited = true;
 				method = method.substring(0, method.length()-3);
 			}
-			if(!SyntaxValidations.existHandler(method)) {
+			if(!SyntaxValidations.existHandler(method)) 
+			{
 				replaces.clear();
 				replaces.put("%method%", method);
 				throw new CommandSyntaxException(Message.CI_NO_SYNTAX.get(TextMode.COLOR, replaces));
@@ -101,22 +118,32 @@ public class CommandInformation {
 		}
 	}
 	
-	public boolean matchArgument(String input, String syntaxArg) throws CommandSyntaxException {
+	public boolean matchArgument(String input, String syntaxArg) throws CommandSyntaxException 
+	{
 		List<String> i = parseArgument(syntaxArg);
-		for(SyntaxHandler h : SyntaxValidations.syntaxes.values()) {
-			try {
+		for(SyntaxHandler h : SyntaxValidations.syntaxes.values()) 
+		{
+			try 
+			{
 				h.check(i.get(1), input);
 				return true;
-			} catch (Exception e) { }
+			} 
+			catch (Exception e) 
+			{ 
+				
+			}
 		}
 		return false;
 	}
 			
-	private List<String> parseArgument(String arg) throws CommandSyntaxException {
+	private List<String> parseArgument(String arg) throws CommandSyntaxException 
+	{
 		List<String> i = new ArrayList<String>();
 		String method = "";
 		String parameters = "";
-		if(arg.contains("[") && arg.contains("]")) {
+		
+		if(arg.contains("[") && arg.contains("]")) 
+		{
 			boolean start = false;
 			boolean end = false;
 			int dots = 0;
@@ -125,25 +152,33 @@ public class CommandInformation {
 				HashMap<String,String> replaces = new HashMap<String, String>();
 				replaces.put("%char%", "[");
 				replaces.put("%arg%", arg);
-				if(ch.equals("[")) {
+				if(ch.equals("[")) 
+				{
 					if(start) throw new CommandSyntaxException(Message.CI_ERROR_AT_CHAR_IN_ARG.get(TextMode.COLOR, replaces));
 					if(end) throw new CommandSyntaxException(Message.CI_ERROR_AT_CHAR_IN_ARG.get(TextMode.COLOR, replaces));
 					start = true;
 					continue;
 				}
-				if(ch.equals("]")) {
+				if(ch.equals("]")) 
+				{
 					replaces.put("%char%", "]");
 					if(!start) throw new CommandSyntaxException(Message.CI_ERROR_AT_CHAR_IN_ARG.get(TextMode.COLOR, replaces));
 					if(end) throw new CommandSyntaxException(Message.CI_ERROR_AT_CHAR_IN_ARG.get(TextMode.COLOR, replaces));
 					end = true;
 					continue;
 				}
-				if(!start && !end) {
+				if(!start && !end) 
+				{
 					method += ch;
-				} else if(start == true && end == false) {
+				} 
+				else if(start == true && end == false) 
+				{
 					parameters += ch;
-				} else {
-					if(ch.equalsIgnoreCase(".")) {
+				}
+				else 
+				{
+					if(ch.equalsIgnoreCase(".")) 
+					{
 						dots++;
 						if(dots <= 3) continue;
 					}
@@ -152,7 +187,9 @@ public class CommandInformation {
 					throw new CommandSyntaxException(Message.CI_ERROR_AT_CHAR.get(TextMode.COLOR, replaces));
 				}
 			}
-		} else {
+		} 
+		else 
+		{
 			method = arg;
 		}
 		i.add(method);
@@ -160,57 +197,78 @@ public class CommandInformation {
 		return i;
 	}
 	
-	private void processCommandBase(String base) throws CommandSyntaxException {
-		if(base.toLowerCase().startsWith("?")) {
+	private void processCommandBase(String base) throws CommandSyntaxException 
+	{
+		if(base.toLowerCase().startsWith("?")) 
+		{
 			commandExecutor = CommandExecutor.ALL;
 		}
-		if(base.toLowerCase().startsWith("/")) {
+		if(base.toLowerCase().startsWith("/")) 
+		{
 			commandExecutor = CommandExecutor.PLAYER;
 		}
-		if(base.toLowerCase().startsWith("$")) {
+		if(base.toLowerCase().startsWith("$")) 
+		{
 			commandExecutor = CommandExecutor.CONSOLE;
 		}
 		base = base.substring(1);
-		if(base.startsWith("<")) throw new CommandSyntaxException(Message.CI_CMD_CANNOT_START_WITH.get(TextMode.COLOR));
+		if(base.startsWith("<")) 
+			throw new CommandSyntaxException(Message.CI_CMD_CANNOT_START_WITH.get(TextMode.COLOR));
 		this.command = base;
 	}
 	
 	
-	public boolean matches(CommandExecutor sender, String command, String[] args) throws CommandSyntaxException, SyntaxResponseException, ExecutorIncompatibleException {
-		if(!this.command.equalsIgnoreCase(command)) return false;
-		
-		switch(commandExecutor) {
+	public boolean matches(CommandExecutor sender, String command, String[] args) throws CommandSyntaxException, SyntaxResponseException, ExecutorIncompatibleException 
+	{
+		if(!this.command.equalsIgnoreCase(command)) 
+			return false;
+
+		switch(commandExecutor) 
+		{
 		case CONSOLE:
 			if(sender != CommandExecutor.CONSOLE) throw new ExecutorIncompatibleException(Message.ONLY_CONSOLE.get(TextMode.COLOR));
 			break;
 		case PLAYER:
 			if(sender != CommandExecutor.PLAYER) throw new ExecutorIncompatibleException(Message.ONLY_INGAME.get(TextMode.COLOR));
 			break;
+		default:
+			break;
 		}
-		
-		if(args == null || args.length == 0) {
-			if(this.args.size() != args.length) return false;
+
+		if(args == null || args.length == 0) 
+		{
+			if(this.args.size() != args.length) 
+				return false;
 		}
-		
+
 		int i = 0; 
 		Argument unlimitedArg = null;
-		while(i < args.length) {
+		
+		while(i < args.length) 
+		{
 			Argument exArg = null;
-			try {
+			try 
+			{
 				exArg = this.args.get(i);
-			} catch (IndexOutOfBoundsException e) {
-				if(unlimitedArg == null) {
-				} else {
+			} 
+			catch (IndexOutOfBoundsException e) 
+			{
+				if(unlimitedArg != null) 
+				{
 					exArg = unlimitedArg;
 				}
 			}
-			if(exArg.isUnlimited()) {
+			if(exArg.isUnlimited()) 
+			{
 				unlimitedArg = (Argument) exArg.clone();
 			}
 			String arg = args[i];
-			try {
+			try 
+			{
 				exArg.getHandler().check(exArg.getParameter(), arg);
-			} catch (SyntaxResponseException e) {
+			} 
+			catch (SyntaxResponseException e) 
+			{
 				throw e;
 			}
 			i++;
@@ -220,59 +278,70 @@ public class CommandInformation {
 		return false;
 	}
 	
-	enum CommandExecutor {
+	enum CommandExecutor 
+	{
 		CONSOLE(),
 		PLAYER(),
 		ALL();
 	}
 
-	public String getSyntax() {
-		return syntax;
+	public String getSyntax() 
+	{
+		return this.syntax;
 	}
 
-	public void setSyntax(String syntax) {
+	public void setSyntax(String syntax) 
+	{
 		this.syntax = syntax;
 	}
 
-	public String getCommand() {
-		return command;
+	public String getCommand() 
+	{
+		return this.command;
 	}
 
-	public void setCommand(String command) {
+	public void setCommand(String command) 
+	{
 		this.command = command;
 	}
 
-	public String getPermission() {
-		return permission;
+	public String getPermission() 
+	{
+		return this.permission;
 	}
 
-	public void setPermission(String permission) {
+	public void setPermission(String permission) 
+	{
 		this.permission = permission;
 	}
 
-	public String getDescription() {
-		return description;
+	public String getDescription() 
+	{
+		return this.description;
 	}
 
-	public void setDescription(String description) {
+	public void setDescription(String description) 
+	{
 		this.description = description;
 	}
 
-	public CommandExecutor getCommandExecutor() {
-		return commandExecutor;
+	public CommandExecutor getCommandExecutor() 
+	{
+		return this.commandExecutor;
 	}
 
-	public void setCommandExecutor(CommandExecutor commandExecutor) {
+	public void setCommandExecutor(CommandExecutor commandExecutor) 
+	{
 		this.commandExecutor = commandExecutor;
 	}
 
-	public List<Argument> getArgs() {
-		return args;
+	public List<Argument> getArgs() 
+	{
+		return this.args;
 	}
 
-	public void setArgs(List<Argument> args) {
+	public void setArgs(List<Argument> args) 
+	{
 		this.args = args;
 	}
-	
-	
 }

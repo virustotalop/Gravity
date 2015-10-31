@@ -7,6 +7,7 @@ import java.util.regex.MatchResult;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import eu.blackwoods.levitate.syntax.BooleanSyntax;
@@ -28,12 +29,18 @@ import eu.blackwoods.levitate.syntax.WorldSyntax;
 
 public class SyntaxValidations {
 	
-	public static HashMap<String, SyntaxHandler> syntaxes = new HashMap<String, SyntaxHandler>();
+	private Plugin plugin;
+	public SyntaxValidations(Plugin plugin)
+	{
+		this.plugin = plugin;
+	}
+	
+	private HashMap<String, SyntaxHandler> syntaxes = new HashMap<String, SyntaxHandler>();
 	
 	/**
 	 * Register default syntaxes to create your command
 	 */
-	public static void registerDefaultSyntax(JavaPlugin plugin) {
+	public void registerDefaultSyntax() {
 		registerSyntax("boolean", new BooleanSyntax());
 		registerSyntax("int", new IntegerSyntax());
 		registerSyntax("double", new DoubleSyntax());
@@ -46,7 +53,7 @@ public class SyntaxValidations {
 		registerSyntax("choice", new ChoiceSyntax());
 		registerSyntax("choicei", new ChoiceIgnoreCaseSyntax());
 		registerSyntax("player", new PlayerSyntax());
-		registerSyntax("item", new ItemStackSyntax(plugin));
+		registerSyntax("item", new ItemStackSyntax(this.plugin));
 		registerSyntax("*", new WildcardSyntax());
 		registerSyntax("world", new WorldSyntax());
 		registerSyntax("url", new URLSyntax());
@@ -57,25 +64,31 @@ public class SyntaxValidations {
 	 * @param method The base command of your syntax
 	 * @param handler The handler to check values against your syntax
 	 */
-	public static void registerSyntax(String method, SyntaxHandler handler) {
-		syntaxes.put(method, handler);
+	public void registerSyntax(String method, SyntaxHandler handler) 
+	{
+		this.syntaxes.put(method, handler);
 	}
 	
-	public static boolean existHandler(String method) {
-		for(String m : syntaxes.keySet()) 
-			if(m.equalsIgnoreCase(method)) return true;
+	public boolean existHandler(String method) 
+	{
+		for(String m : this.syntaxes.keySet()) 
+			if(m.equalsIgnoreCase(method)) 
+				return true;
 		return false;
 	}
 	
-	public static Iterable<MatchResult> allMatches(final Pattern p, final CharSequence input) {
+	public static Iterable<MatchResult> allMatches(final Pattern p, final CharSequence input) 
+	{
 		return new Iterable<MatchResult>() {
 			public Iterator<MatchResult> iterator() {
 				return new Iterator<MatchResult>() {
 					final Matcher matcher = p.matcher(input);
 					MatchResult pending;
 
-					public boolean hasNext() {
-						if (pending == null && matcher.find()) {
+					public boolean hasNext() 
+					{
+						if (pending == null && matcher.find()) 
+						{
 							pending = matcher.toMatchResult();
 						}
 						return pending != null;

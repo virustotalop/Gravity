@@ -1,19 +1,26 @@
 package eu.blackwoods.levitate.exception;
 
 public class ExecutorIncompatibleException extends Exception {
-	public ExecutorIncompatibleException() {
+
+	private static final long serialVersionUID = 8291388177838996411L;
+
+	public ExecutorIncompatibleException() 
+	{
 		super();
 	}
 
-	public ExecutorIncompatibleException(String message) {
+	public ExecutorIncompatibleException(String message) 
+	{
 		super(message);
 	}
 
-	public ExecutorIncompatibleException(String message, Throwable cause) {
+	public ExecutorIncompatibleException(String message, Throwable cause) 
+	{
 		super(message, cause);
 	}
 
-	public ExecutorIncompatibleException(Throwable cause) {
+	public ExecutorIncompatibleException(Throwable cause) 
+	{
 		super(cause);
 	}
 }

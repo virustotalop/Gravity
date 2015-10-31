@@ -11,7 +11,7 @@ import java.util.List;
 
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.plugin.Plugin;
 
 import eu.blackwoods.levitate.Message;
 import eu.blackwoods.levitate.Message.TextMode;
@@ -20,10 +20,10 @@ import eu.blackwoods.levitate.exception.SyntaxResponseException;
 
 public class ItemStackSyntax implements SyntaxHandler {
 	
-	public static HashMap<String, ItemStack> items = new HashMap<String, ItemStack>();  
-	public static JavaPlugin plugin = null;
+	private HashMap<String, ItemStack> items = new HashMap<String, ItemStack>();  
+	private Plugin plugin;
 	
-	public ItemStackSyntax(JavaPlugin plugin) {
+	public ItemStackSyntax(Plugin plugin) {
 		this.plugin = plugin;
 		loadCSV();
 	}
@@ -64,11 +64,13 @@ public class ItemStackSyntax implements SyntaxHandler {
 		if(is == null) throw new SyntaxResponseException(Message.ITEMSTACKSYNTAX_ITEM_NOT_FOUND.get(TextMode.COLOR, replaces));
 	}
 	
-	public static void loadCSV() {
-		if(plugin == null) return;
+	private void loadCSV() 
+	{
+		if(this.plugin == null) return;
 		String csvFile = "plugins/" + plugin.getName() + "/items.csv";
 		File f = new File(csvFile);
-		if(!f.exists()) {
+		if(!f.exists()) 
+		{
 			csvFile = "plugins/Essentials/items.csv";
 			f = new File(csvFile);
 			if(!f.exists()) return;
@@ -77,8 +79,8 @@ public class ItemStackSyntax implements SyntaxHandler {
 		String line = "";
 		String cvsSplitBy = ",";
 
-		try {
-
+		try 
+		{
 			br = new BufferedReader(new FileReader(csvFile));
 			items.clear();
 			while ((line = br.readLine()) != null) {

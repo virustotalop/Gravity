@@ -7,7 +7,6 @@ import java.util.List;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -16,15 +15,16 @@ import eu.blackwoods.levitate.syntax.ItemStackSyntax;
 
 public class ParameterSet {
 	
-	List<String> parameter = new ArrayList<String>();
+	private List<String> parameter = new ArrayList<String>();
 	
 	/**
 	 * The collection of parameters
 	 * @param args
 	 */
-	public ParameterSet(String[] args) {
+	public ParameterSet(String[] args) 
+	{
 		for(String arg : args)
-			parameter.add(arg);
+			this.parameter.add(arg);
 	}
 	
 	/**
@@ -32,8 +32,9 @@ public class ParameterSet {
 	 * @param i The index in your command, starts at 0
 	 * @return
 	 */
-	public String getString(int i) {
-		return parameter.get(i);
+	public String getString(int i) 
+	{
+		return this.parameter.get(i);
 	}
 
 	/**
@@ -41,8 +42,9 @@ public class ParameterSet {
 	 * @param i The index in your command, starts at 0
 	 * @return
 	 */
-	public int getInt(int i) {
-		return Integer.parseInt(parameter.get(i));
+	public int getInt(int i) 
+	{
+		return Integer.parseInt(this.parameter.get(i));
 	}
 	
 	/**
@@ -50,8 +52,9 @@ public class ParameterSet {
 	 * @param i The index in your command, starts at 0
 	 * @return
 	 */
-	public double getDouble(int i) {
-		return Double.parseDouble(parameter.get(i));
+	public double getDouble(int i) 
+	{
+		return Double.parseDouble(this.parameter.get(i));
 	}
 
 	/**
@@ -59,22 +62,13 @@ public class ParameterSet {
 	 * @param i The index in your command, starts at 0
 	 * @return
 	 */
-	public boolean getBoolean(int i) {
+	public boolean getBoolean(int i) 
+	{
 		String arg = parameter.get(i);
 		if(arg.equalsIgnoreCase("true")) return true;
 		if(arg.equalsIgnoreCase("false")) return false;
 		if(arg.equalsIgnoreCase("0")) return false;
 		if(arg.equalsIgnoreCase("1")) return true;
-		if(arg.equalsIgnoreCase("on")) return true;
-		if(arg.equalsIgnoreCase("off")) return false;
-		if(arg.equalsIgnoreCase("an")) return true;
-		if(arg.equalsIgnoreCase("aus")) return false;
-		if(arg.equalsIgnoreCase("ja")) return true;
-		if(arg.equalsIgnoreCase("nein")) return false;
-		if(arg.equalsIgnoreCase("yes")) return true;
-		if(arg.equalsIgnoreCase("no")) return false;
-		if(arg.equalsIgnoreCase("enable")) return true;
-		if(arg.equalsIgnoreCase("disable")) return false;
 		return false;
 	}
 
@@ -83,17 +77,9 @@ public class ParameterSet {
 	 * @param i The index in your command, starts at 0
 	 * @return
 	 */
-	public Player getPlayer(int i) {
+	public Player getPlayer(int i) 
+	{
 		return Bukkit.getPlayer(parameter.get(i));
-	}
-
-	/**
-	 * Get argument as OfflinePlayer
-	 * @param i The index in your command, starts at 0
-	 * @return
-	 */
-	public OfflinePlayer getOfflinePlayer(int i) {
-		return Bukkit.getOfflinePlayer(parameter.get(i));
 	}
 	
 	/**
@@ -101,23 +87,31 @@ public class ParameterSet {
 	 * @param i The index in your command, starts at 0
 	 * @return
 	 */
-	public ItemStack getItemStack(int i) {
+	@SuppressWarnings("deprecation")
+	public ItemStack getItemStack(int i) 
+	{
 		ItemStack is = null;
 		String arg = parameter.get(i);
-		if(ItemStackSyntax.items.containsKey(arg.toLowerCase())) {
+		if(ItemStackSyntax.items.containsKey(arg.toLowerCase())) 
+		{
 			is = ItemStackSyntax.items.get(arg.toLowerCase());
-		} else if(arg.contains(":")) {
+		}
+		else if(arg.contains(":")) 
+		{
 			String a = arg.split(":")[0];
 			String b = arg.split(":")[1];
 			int id = 0;
 			int meta = Integer.parseInt(b);
-			if(!isInt(a)) {
+			if(!isInt(a)) 
+			{
 				is = ItemStackSyntax.items.get(a);
 				is.setDurability((short) meta);
 				return is;
 			}
 			is = new ItemStack(Material.getMaterial(id), 1, (short) meta);
-		} else if(isInt(arg)) {
+		} 
+		else if(isInt(arg)) 
+		{
 			is = new ItemStack(Integer.parseInt(arg));
 		}
 		return is;
@@ -129,7 +123,8 @@ public class ParameterSet {
 	 * @param end End index
 	 * @return
 	 */
-	public String getString(int start, int end) {
+	public String getString(int start, int end) 
+	{
 		return getString(start, end, " ");
 	}
 	
@@ -140,15 +135,22 @@ public class ParameterSet {
 	 * @param delimiter Combine Strings with delimiter
 	 * @return
 	 */
-	public String getString(int start, int end, String delimiter) {
-		try {
+	public String getString(int start, int end, String delimiter) 
+	{
+		try 
+		{
 			String str = "";
-			for(String s : parameter.subList(start, end)) {
+			for(String s : parameter.subList(start, end)) 
+			{
 				str += s + delimiter;
 			}
 			if(str.endsWith(delimiter)) str.substring(0, str.length()-2);
 			return str;
-		} catch (IndexOutOfBoundsException e) { }
+		} 
+		catch (IndexOutOfBoundsException e) 
+		{ 
+			
+		}
 		return null;
 	}
 	
@@ -157,7 +159,8 @@ public class ParameterSet {
 	 * @param start Start index 
 	 * @return
 	 */
-	public String getMessage(int start) {
+	public String getMessage(int start) 
+	{
 		return getString(start, parameter.size());
 	}
 
@@ -166,7 +169,8 @@ public class ParameterSet {
 	 * @param i The index in your command, starts at 0
 	 * @return
 	 */
-	public World getWorld(int i) {
+	public World getWorld(int i) 
+	{
 		return Bukkit.getWorld(parameter.get(i));
 	}
 	
@@ -175,11 +179,15 @@ public class ParameterSet {
 	 * @param i The index in your command, starts at 0
 	 * @return
 	 */
-	public URL getURL(int i) {
-		try {
+	public URL getURL(int i) 
+	{
+		try 
+		{
 			return new URL(parameter.get(i));
-		} catch (MalformedURLException e) {
-			e.printStackTrace();
+		} 
+		catch (MalformedURLException e) 
+		{
+			
 		}
 		return null;
 	}
@@ -189,16 +197,22 @@ public class ParameterSet {
 	 * @param i The index in your command, starts at 0
 	 * @return
 	 */
-	public Object get(int i) {
+	public Object get(int i) 
+	{
 		return (Object) parameter.get(i);
 	}
 	
-	
-	private boolean isInt(String val) {
-		try {
+	private boolean isInt(String val) 
+	{
+		try 
+		{
 			Integer.parseInt(val);
 			return true;
-		} catch (Exception e) { }
+		} 
+		catch (Exception e) 
+		{ 
+			
+		}
 		return false;
 	}
 }

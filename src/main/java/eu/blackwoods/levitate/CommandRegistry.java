@@ -32,24 +32,15 @@ public class CommandRegistry {
 	private Plugin plugin = null;
 	
 	/**
-	 * This class registers your commands and handels them.
-	 * This constructor is for Java-Standalone applications
-	 */
-	public CommandRegistry() {
-		detectEnvironment();
-		setEnvironment(Environment.STANDALONE);
-	}
-	
-	/**
-	 * This class registers your commands and handels them.
+	 * This class registers your commands and handles them.
 	 * This constructor is for Bukkit/Spigot plugins
 	 * @param plugin The JavaPlugin instance
 	 */
-	public CommandRegistry(Plugin plugin) { 
+	public CommandRegistry(Plugin plugin) {
+		
 		detectEnvironment();
 		if(plugin == null) return;
 		this.plugin = plugin;
-		if(getEnvironment() == Environment.STANDALONE) setEnvironment(Environment.BUKKIT);
 	}
 	
 	/**
@@ -57,13 +48,15 @@ public class CommandRegistry {
 	 * @param info CommandInformation with syntax, permission etc
 	 * @param handler The CommandHandler wich handels the execution of the command
 	 */
-	public void register(CommandInformation info, CommandHandler handler) {
+	public void register(CommandInformation info, CommandHandler handler) 
+	{
 		registerFakeCommand(info, null);
 		commands.put(info, handler);
 	}
 	
 	public void registerAlias(String alias) {
-		if(aliases.contains(alias.toLowerCase())) return;
+		if(aliases.contains(alias.toLowerCase())) 
+			return;
 		aliases.add(alias.toLowerCase());
 	}
 	
@@ -71,22 +64,28 @@ public class CommandRegistry {
 	 * Register new command with aliases
 	 * @param info CommandInformation with syntax, permission etc
 	 * @param aliases Array with aliases
-	 * @param handler The CommandHandler wich handels the execution of the command
+	 * @param handler The CommandHandler which handles the execution of the command
 	 */
-	public void register(CommandInformation info, String[] aliases, CommandHandler handler) {
+	public void register(CommandInformation info, String[] aliases, CommandHandler handler) 
+	{
 		
-		for(String alias : aliases) {
+		for(String alias : aliases) 
+		{
 			String ns = "";
 			String syntax = info.getSyntax();
-			if(syntax.startsWith("?") || syntax.startsWith("/") || syntax.startsWith("$")) {
+			if(syntax.startsWith("?") || syntax.startsWith("/") || syntax.startsWith("$")) 
+			{
 				ns = syntax.substring(0, 1);
 				syntax = syntax.substring(1);
 			}
 			ns += alias + " ";
-			if(syntax.contains(" ")) {
+			if(syntax.contains(" ")) 
+			{
 				String[] split = syntax.split(" ");
-				for (int i = 0; i < split.length; i++) {
-					if(i != 0) {
+				for (int i = 0; i < split.length; i++) 
+				{
+					if(i != 0) 
+					{
 						ns += split[i] + " ";
 					}
 				}
@@ -94,40 +93,49 @@ public class CommandRegistry {
 			if(ns.endsWith(" ")) ns = ns.substring(0, ns.length()-1);
 			CommandInformation cinfo = new CommandInformation(ns, info.getPermission());
 			registerAlias(alias);
-			commands.put(cinfo, handler);
+			this.commands.put(cinfo, handler);
 		}
 		registerFakeCommand(info, aliases);
-		commands.put(info, handler);
+		this.commands.put(info, handler);
 	}
 	
-	private void registerFakeCommand(final CommandInformation info, String[] aliases) {
-		if(aliases == null) aliases = new String[] {};
-		if(environment == Environment.SPIGOT || environment == Environment.BUKKIT) {
-			try {
+	private void registerFakeCommand(final CommandInformation info, String[] aliases) 
+	{
+		if(aliases == null) 
+			aliases = new String[] {};
+
+		if(this.environment == Environment.SPIGOT || this.environment == Environment.BUKKIT) {
+			try 
+			{
 				final Field f = getPlugin().getServer().getClass().getDeclaredField("commandMap");
 				f.setAccessible(true);
-	            CommandMap cmap = (CommandMap)f.get(getPlugin().getServer());
-	            cmap.register(info.getCommand(), new Command(info.getCommand(), info.getDescription(), info.getSyntax(), new ArrayList<String>(Arrays.asList(aliases))) {
-					
-	            	@Override
-	            	public List<String> tabComplete(CommandSender sender, String alias, String[] args) throws IllegalArgumentException {
-	            		List<String> complete = handleTabComplete(sender, alias, args);
-	            		if(complete == null) return super.tabComplete(sender, alias, args);
-	            		return complete;
-	            	}
-	            	
+				CommandMap cmap = (CommandMap)f.get(getPlugin().getServer());
+				cmap.register(info.getCommand(), new Command(info.getCommand(), info.getDescription(), info.getSyntax(), new ArrayList<String>(Arrays.asList(aliases))) {
+
 					@Override
-					public boolean execute(CommandSender arg0, String arg1, String[] arg2) {
-						try {
-							
-							return playerPassCommand(arg0, arg1, arg2);
-						} catch (CommandSyntaxException | NoPermissionException | SyntaxResponseException | ExecutorIncompatibleException e) {
-							if(e instanceof NoPermissionException) {
-								arg0.sendMessage(Message.NO_PERMISSION.get(TextMode.COLOR));
+					public List<String> tabComplete(CommandSender sender, String alias, String[] args) throws IllegalArgumentException 
+					{
+						List<String> complete = handleTabComplete(sender, alias, args);
+						if(complete == null) return super.tabComplete(sender, alias, args);
+						return complete;
+					}
+
+					@Override
+					public boolean execute(CommandSender sender, String arg1, String[] arg2) {
+						try 
+						{
+							return playerPassCommand(sender, arg1, arg2);
+						} 
+						catch (CommandSyntaxException | NoPermissionException | SyntaxResponseException | ExecutorIncompatibleException e) 
+						{
+							if(e instanceof NoPermissionException) 
+							{
+								sender.sendMessage(Message.NO_PERMISSION.get(TextMode.COLOR));
 								return true;
 							}
-							if(e instanceof SyntaxResponseException || e instanceof ExecutorIncompatibleException) {
-								arg0.sendMessage(e.getMessage());
+							if(e instanceof SyntaxResponseException || e instanceof ExecutorIncompatibleException) 
+							{
+								sender.sendMessage(e.getMessage());
 								return true;
 							}
 							e.printStackTrace();
@@ -135,14 +143,19 @@ public class CommandRegistry {
 						return false;
 					}
 				});
-			} catch (IllegalArgumentException | SecurityException e) {
+			} 
+			catch (IllegalArgumentException | SecurityException e) 
+			{
 				e.printStackTrace();
-			} catch (NoSuchFieldException e1) {
+			} 
+			catch (NoSuchFieldException e1) 
+			{
 				e1.printStackTrace();
-			} catch (IllegalAccessException e1) {
+			} 
+			catch (IllegalAccessException e1) 
+			{
 				e1.printStackTrace();
 			}
-			
 		}
 	}
 	
@@ -153,7 +166,8 @@ public class CommandRegistry {
 	 * @param args
 	 * @return List of strings which could fit the entered argument
 	 */
-	private List<String> handleTabComplete(CommandSender sender, String command, String[] args) {
+	private List<String> handleTabComplete(CommandSender sender, String command, String[] args) 
+	{
 		if(args.length == 0) return null;
 		List<String> complete = new ArrayList<String>();
 		int lastArg = args.length-1;
@@ -161,32 +175,44 @@ public class CommandRegistry {
 		CommandExecutor ce = CommandExecutor.PLAYER;
 		if(!(sender instanceof Player)) ce = CommandExecutor.CONSOLE;
 		
-		for(CommandInformation info : commands.keySet()) {
-			if(!info.getCommand().equalsIgnoreCase(command)) continue;
-			if(permissionHandler != null && info.getPermission() != null) {
-				if(!permissionHandler.hasPermission(sender, info.getPermission())) {
+		for(CommandInformation info : this.commands.keySet()) 
+		{
+			if(!info.getCommand().equalsIgnoreCase(command)) 
+				continue;
+			if(this.permissionHandler != null && info.getPermission() != null) 
+			{
+				if(!this.permissionHandler.hasPermission(sender, info.getPermission())) 
+				{
 					continue;
 				}
 			}
 			CommandExecutor cmdExec = null;
-			if(sender instanceof Player) {
+			if(sender instanceof Player) 
+			{
 				cmdExec = CommandExecutor.PLAYER;
-			} else {
+			}
+			else 
+			{
 				cmdExec = CommandExecutor.CONSOLE;
 			}
 			
-			switch(info.getCommandExecutor()) {
+			switch(info.getCommandExecutor()) 
+			{
 			case CONSOLE:
 				if(cmdExec != CommandExecutor.CONSOLE) continue;
 				break;
 			case PLAYER:
 				if(cmdExec != CommandExecutor.PLAYER) continue;
 				break;
+			default:
+				break;
 			}
 			Argument exArg = null;
-			try {
+			try 
+			{
 				exArg = info.getArgs().get(lastArg);
-			} catch (IndexOutOfBoundsException e) {
+			} catch (IndexOutOfBoundsException e) 
+			{
 				exArg = info.getArgs().get(info.getArgs().size()-1);
 				if(!exArg.isUnlimited()) e.printStackTrace();
 			}
@@ -195,13 +221,18 @@ public class CommandRegistry {
 			if(l != null && l.size() > 0) complete.addAll(l);
 		}
 		Iterator<String> iComplete = complete.iterator();
-		while(iComplete.hasNext()) {
+		while(iComplete.hasNext()) 
+		{
 			String str = iComplete.next();
-			if(!str.toLowerCase().startsWith(arg.toLowerCase())) iComplete.remove();
+			if(!str.toLowerCase().startsWith(arg.toLowerCase())) 
+				iComplete.remove();
 		}
-		Collections.sort(complete, new Comparator<String>() {
+		
+		Collections.sort(complete, new Comparator<String>() 
+		{
 	        @Override
-	        public int compare(String s1, String s2) {
+	        public int compare(String s1, String s2) 
+	        {
 	            return s1.compareToIgnoreCase(s2);
 	        }
 	    });	
@@ -212,22 +243,24 @@ public class CommandRegistry {
 	 * Register default Bukkit/Spigot PermissionHandler.
 	 * It uses the hasPermission() method of Bukkit/Spigot to check permissions.
 	 */
-	public void registerBukkitPermissionHandler() {
-		permissionHandler = new PermissionHandler() {
-			
+	public void registerBukkitPermissionHandler() 
+	{
+		this.permissionHandler = new PermissionHandler() 
+		{
 			@Override
-			public boolean hasPermission(Object sender, String permission) {
-				if(sender instanceof CommandSender) {
-					if(!((CommandSender)sender).hasPermission(permission)) return false;
-				}
-				return true;
+			public boolean hasPermission(Object sender, String permission) 
+			{
+				if(sender instanceof CommandSender)
+					return false;
+					
+					return ((CommandSender)sender).hasPermission(permission);
 			}
 		};
 	}
 	
 	/**
 	 * Register your own PermissionHandler
-	 * @param permissionHandler PermissionHandler wich checks whether the sender has permission to execute the command
+	 * @param permissionHandler PermissionHandler which checks whether the sender has permission to execute the command
 	 */
 	public void registerPermissionHandler(PermissionHandler permissionHandler) {
 		this.permissionHandler = permissionHandler;
@@ -236,7 +269,8 @@ public class CommandRegistry {
 	/**
 	 * Register default HelpMap
 	 */
-	public void registerDefaultHelpMap() {
+	public void registerDefaultHelpMap() 
+	{
 		this.helpMap = new DefaultHelpMap(this);
 	}
 	
@@ -244,7 +278,8 @@ public class CommandRegistry {
 	 * Register own HelpMaoo
 	 * @param helpMap Handles the help-message
 	 */
-	public void registerHelpMap(HelpMap helpMap) {
+	public void registerHelpMap(HelpMap helpMap)
+	{
 		this.helpMap = helpMap;
 	}
 	
@@ -260,19 +295,25 @@ public class CommandRegistry {
 	 * @throws ExecutorIncompatibleException
 	 */
 	@Deprecated
-	public boolean userPassCommand(String command, String[] args) throws CommandSyntaxException, SyntaxResponseException, NoPermissionException, ExecutorIncompatibleException {
-		for(CommandInformation i : commands.keySet()) {
-			if(i.matches(CommandExecutor.PLAYER, command, args)) {
-				if(permissionHandler != null && i.getPermission() != null) {
-					if(!permissionHandler.hasPermission(null, i.getPermission())) {
+	public boolean userPassCommand(String command, String[] args) throws CommandSyntaxException, SyntaxResponseException, NoPermissionException, ExecutorIncompatibleException 
+	{
+		for(CommandInformation i : this.commands.keySet()) 
+		{
+			if(i.matches(CommandExecutor.PLAYER, command, args)) 
+			{
+				if(this.permissionHandler != null && i.getPermission() != null) 
+				{
+					if(!this.permissionHandler.hasPermission(null, i.getPermission())) 
+					{
 						throw new NoPermissionException(Message.NO_PERMISSION.get(TextMode.COLOR));
 					}
 				}
-				commands.get(i).execute(null, command, new ParameterSet(args));
+				this.commands.get(i).execute(null, command, new ParameterSet(args));
 				return true;
 			}
 		}
-		if(helpMap != null) helpMap.onHelp(null, command, args);
+		if(this.helpMap != null) 
+			this.helpMap.onHelp(null, command, args);
 		return false;
 	}
 	
@@ -288,61 +329,85 @@ public class CommandRegistry {
 	 * @throws NoPermissionException
 	 * @throws ExecutorIncompatibleException 
 	 */
-	public boolean playerPassCommand(CommandSender sender, String command, String[]args) throws CommandSyntaxException, NoPermissionException, SyntaxResponseException, ExecutorIncompatibleException {
+	public boolean playerPassCommand(CommandSender sender, String command, String[]args) throws CommandSyntaxException, NoPermissionException, SyntaxResponseException, ExecutorIncompatibleException 
+	{
 		CommandExecutor ce = CommandExecutor.PLAYER;
 		if(!(sender instanceof Player)) ce = CommandExecutor.CONSOLE;
 		boolean found = false;
 		SyntaxResponseException exeption = null;
 		ExecutorIncompatibleException execIncompatible = null;
 		
-		for(CommandInformation i : commands.keySet()) {
+		for(CommandInformation i : this.commands.keySet()) 
+		{
 			if(found == true) continue;
-			try {
-				if(i.matches(ce, command, args)) {
-					if(permissionHandler != null && i.getPermission() != null) {
-						if(!permissionHandler.hasPermission(sender, i.getPermission())) {
+			try 
+			{
+				if(i.matches(ce, command, args)) 
+				{
+					if(this.permissionHandler != null && i.getPermission() != null) 
+					{
+						if(!this.permissionHandler.hasPermission(sender, i.getPermission())) 
+						{
 							throw new NoPermissionException(Message.NO_PERMISSION.get(TextMode.COLOR));
 						}
 					}
-					commands.get(i).execute(sender, command, new ParameterSet(args));
+					this.commands.get(i).execute(sender, command, new ParameterSet(args));
 					found = true;
 				}
-			} catch (ExecutorIncompatibleException | SyntaxResponseException e) {
-				if(e instanceof ExecutorIncompatibleException) {
+			} 
+			catch (ExecutorIncompatibleException | SyntaxResponseException e) 
+			{
+				if(e instanceof ExecutorIncompatibleException) 
+				{
 					execIncompatible = (ExecutorIncompatibleException) e;
-				} else {
+				} 
+				else 
+				{
 					exeption = (SyntaxResponseException) e;
 				}
 			}
 		}
-		if(found == false && execIncompatible != null) {
+		if(found == false && execIncompatible != null) 
+		{
 			throw execIncompatible;
-		} else if(exeption != null && found == false) {
+		} 
+		else if(exeption != null && found == false) 
+		{
 			throw exeption;
-		} else if(helpMap != null && found == false) {
-			helpMap.onHelp(sender, command, args);
+		}
+		else if(this.helpMap != null && found == false) 
+		{
+			this.helpMap.onHelp(sender, command, args);
 		}
 		return found;
 	}
 	
-	public static boolean existClass(String clazz) {
-		try {
+	public static boolean existClass(String clazz) 
+	{
+		try 
+		{
 			Class.forName(clazz);
 			return true;
-		} catch (Exception e) { }
+		} 
+		catch (Exception e) 
+		{ 
+			
+		}
 		return false;
 	}
 
-	public HashMap<CommandInformation, CommandHandler> getCommands() {
-		return commands;
+	public HashMap<CommandInformation, CommandHandler> getCommands() 
+	{
+		return this.commands;
 	}
 
-	public void setCommands(HashMap<CommandInformation, CommandHandler> commands) {
+	public void setCommands(HashMap<CommandInformation, CommandHandler> commands) 
+	{
 		this.commands = commands;
 	}
 
 	public PermissionHandler getPermissionHandler() {
-		return permissionHandler;
+		return this.permissionHandler;
 	}
 
 	public void setPermissionHandler(PermissionHandler permissionHandler) {
@@ -352,38 +417,38 @@ public class CommandRegistry {
 	/**
 	 * Auto-Detect the Environment
 	 */
-	public void detectEnvironment() {
-		try {
+	public void detectEnvironment() 
+	{
+		try 
+		{
 			Class.forName("org.bukkit.Server.Spigot");
-			environment = Environment.SPIGOT;
-		} catch (Exception e) {
-			try {
-				Class.forName("org.Bukkit.Bukkit");
-				environment = Environment.BUKKIT;
-			} catch (Exception ee) {
-				environment = Environment.STANDALONE;
-			}
+			this.environment = Environment.SPIGOT;
+		} 
+		catch(Exception ex )
+		{
+			
 		}
 		
-		
+		if(this.environment == null)
+			this.environment = Environment.BUKKIT;
 	}
 
-	public Environment getEnvironment() {
-		return environment;
+	public Environment getEnvironment() 
+	{
+		return this.environment;
 	}
 
-	public void setEnvironment(Environment environment) {
+	public void setEnvironment(Environment environment) 
+	{
 		this.environment = environment;
 	}
 
 	public Plugin getPlugin() {
-		return plugin;
+		return this.plugin;
 	}
 
-	public void setPlugin(Plugin plugin) {
+	public void setPlugin(Plugin plugin) 
+	{
 		this.plugin = plugin;
 	}
-	
-	
-	
 }

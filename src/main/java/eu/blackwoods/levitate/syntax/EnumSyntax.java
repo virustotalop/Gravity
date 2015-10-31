@@ -15,20 +15,27 @@ import eu.blackwoods.levitate.exception.SyntaxResponseException;
 public class EnumSyntax implements SyntaxHandler {
 
 	@Override
-	public void check(String parameter, String passed) throws SyntaxResponseException, CommandSyntaxException {
+	public void check(String parameter, String passed) throws SyntaxResponseException, CommandSyntaxException 
+	{
 		if(parameter.equals("")) throw new CommandSyntaxException(Message.ENUMSYNTAX_NEEDS_CLASSPATH.get(TextMode.COLOR));
 		HashMap<String, String> replaces = new HashMap<String, String>();
 		replaces.put("%class%", parameter);
 		if(!CommandRegistry.existClass(parameter)) throw new CommandSyntaxException(Message.ENUMSYNTAX_CLASS_DOESNT_EXIST.get(TextMode.COLOR, replaces));
-		try {
+		try 
+		{
 			Class<?> cls = Class.forName(parameter);
 			cls.getDeclaredField(passed.toUpperCase());
-		} catch (NoSuchFieldException | ClassNotFoundException e) {
-			if(e instanceof NoSuchFieldException) {
-				try {
+		} 
+		catch (NoSuchFieldException | ClassNotFoundException e) 
+		{
+			if(e instanceof NoSuchFieldException) 
+			{
+				try 
+				{
 					Class<?> cls = Class.forName(parameter);
 					String fields = "";
-					for(Field f : cls.getFields()) {
+					for(Field f : cls.getFields()) 
+					{
 						fields += correctCase(f.getName()) + ", ";
 					}
 					fields = fields.substring(0, fields.length()-2);
@@ -42,12 +49,15 @@ public class EnumSyntax implements SyntaxHandler {
 		}
 	}
 	
-	public String correctCase(String input) {
+	public String correctCase(String input) 
+	{
 		String i = "";
 		int count = 0;
-		for(char ch : input.toCharArray()) {
+		for(char ch : input.toCharArray()) 
+		{
 			String c = String.valueOf(ch).toLowerCase();
-			if(count == 0) c = c.toUpperCase();
+			if(count == 0) 
+				c = c.toUpperCase();
 			i += c;
 			count++;
 		}
@@ -55,14 +65,21 @@ public class EnumSyntax implements SyntaxHandler {
 	}
 
 	@Override
-	public List<String> getTabComplete(String parameter, String passed) {
+	public List<String> getTabComplete(String parameter, String passed) 
+	{
 		List<String> complete = new ArrayList<String>();
-		try {
+		try 
+		{
 			Class<?> cls = Class.forName(parameter);
-			for(Field f : cls.getFields()) {
+			for(Field f : cls.getFields()) 
+			{
 				complete.add(correctCase(f.getName()));
 			}
-		} catch (ClassNotFoundException e2) { }
+		} 
+		catch (ClassNotFoundException e2) 
+		{ 
+			
+		}
 		return complete;
 	}
 
