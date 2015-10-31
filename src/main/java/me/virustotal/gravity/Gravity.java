@@ -9,4 +9,10 @@ public class Gravity extends JavaPlugin {
 	{
 		
 	}
+	
+	@Override
+	public void onDisable()
+	{
+		Snooper.cleanupStaticVars(this);
+	}
 }

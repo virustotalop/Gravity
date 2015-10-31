@@ -11,8 +11,6 @@ import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-import eu.blackwoods.levitate.syntax.ItemStackSyntax;
-
 public class ParameterSet {
 	
 	private List<String> parameter = new ArrayList<String>();
@@ -80,41 +78,6 @@ public class ParameterSet {
 	public Player getPlayer(int i) 
 	{
 		return Bukkit.getPlayer(parameter.get(i));
-	}
-	
-	/**
-	 * Get argument as ItemStack
-	 * @param i The index in your command, starts at 0
-	 * @return
-	 */
-	@SuppressWarnings("deprecation")
-	public ItemStack getItemStack(int i) 
-	{
-		ItemStack is = null;
-		String arg = parameter.get(i);
-		if(ItemStackSyntax.items.containsKey(arg.toLowerCase())) 
-		{
-			is = ItemStackSyntax.items.get(arg.toLowerCase());
-		}
-		else if(arg.contains(":")) 
-		{
-			String a = arg.split(":")[0];
-			String b = arg.split(":")[1];
-			int id = 0;
-			int meta = Integer.parseInt(b);
-			if(!isInt(a)) 
-			{
-				is = ItemStackSyntax.items.get(a);
-				is.setDurability((short) meta);
-				return is;
-			}
-			is = new ItemStack(Material.getMaterial(id), 1, (short) meta);
-		} 
-		else if(isInt(arg)) 
-		{
-			is = new ItemStack(Integer.parseInt(arg));
-		}
-		return is;
 	}
 	
 	/**

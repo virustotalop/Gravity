@@ -51,13 +51,13 @@ public class CommandRegistry {
 	public void register(CommandInformation info, CommandHandler handler) 
 	{
 		registerFakeCommand(info, null);
-		commands.put(info, handler);
+		this.commands.put(info, handler);
 	}
 	
 	public void registerAlias(String alias) {
-		if(aliases.contains(alias.toLowerCase())) 
+		if(this.aliases.contains(alias.toLowerCase())) 
 			return;
-		aliases.add(alias.toLowerCase());
+		this.aliases.add(alias.toLowerCase());
 	}
 	
 	/**

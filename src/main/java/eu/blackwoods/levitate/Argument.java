@@ -68,7 +68,7 @@ public class Argument implements Cloneable {
 
 	public boolean isUnlimited() 
 	{
-		return unlimited;
+		return this.unlimited;
 	}
 
 	public void setUnlimited(boolean unlimited) 

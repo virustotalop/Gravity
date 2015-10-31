@@ -10,13 +10,16 @@ import eu.blackwoods.levitate.SyntaxValidations;
 public class Levitate {
 	
 	private Plugin plugin;
-	private SyntaxValidations syntaxValidations;
+	private static boolean syntaxRegistered = false;
 	
 	public Levitate(Plugin plugin)
 	{
 		this.plugin = plugin;
-		this.syntaxValidations = new SyntaxValidations(plugin);
-		this.syntaxValidations.registerDefaultSyntax();
+		if(!syntaxRegistered)
+		{
+			syntaxRegistered = true;
+			SyntaxValidations.registerDefaultSyntax();
+		}
 	}
 	
 	public void registerCommand(String usage, String permission, String description, CommandHandler commandHandler)
