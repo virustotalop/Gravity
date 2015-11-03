@@ -26,14 +26,16 @@ public class ChoiceSyntax implements SyntaxHandler {
 		String[] ch = parameter.split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)");
 		List<String> choices = new ArrayList<String>();
 		String strList = "";
-		for(String s : ch) {
+		for(String s : ch) 
+		{
 			strList += s+", ";
 			choices.add(s);
 		}
 		strList = strList.substring(0,strList.length()-2);
 		replaces.put("%arg%", passed);
 		replaces.put("%list%", strList);
-		if(!choices.contains(passed)) throw new SyntaxResponseException(Message.CHOICESYNTAX_NOT_IN_LIST.get(TextMode.COLOR, replaces));
+		if(!choices.contains(passed)) 
+			throw new SyntaxResponseException(Message.CHOICESYNTAX_NOT_IN_LIST.get(TextMode.COLOR, replaces));
 		
 	}
 
@@ -44,10 +46,10 @@ public class ChoiceSyntax implements SyntaxHandler {
 		Matcher m = p.matcher(parameter);
 		String[] ch = parameter.split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)");
 		List<String> choices = new ArrayList<String>();
-		for(String s : ch) {
+		for(String s : ch) 
+		{
 			choices.add(s);
 		}
 		return choices;
 	}
-
 }

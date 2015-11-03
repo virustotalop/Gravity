@@ -8,12 +8,14 @@ import eu.blackwoods.levitate.exception.SyntaxResponseException;
 public class WildcardSyntax implements SyntaxHandler {
 
 	@Override
-	public void check(String parameter, String passed) throws SyntaxResponseException {
+	public void check(String parameter, String passed) throws SyntaxResponseException 
+	{
 		
 	}
 
 	@Override
-	public List<String> getTabComplete(String parameter, String passed) {
+	public List<String> getTabComplete(String parameter, String passed) 
+	{
 		return null;
 	}
 }

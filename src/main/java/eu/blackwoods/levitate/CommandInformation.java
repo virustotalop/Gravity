@@ -20,6 +20,7 @@ public class CommandInformation {
 	private String description = "";
 	private CommandExecutor commandExecutor;
 	private List<Argument> args = new ArrayList<Argument>();
+	private List<String> aliases = new ArrayList<String>();
 	
 	/**
 	 * Create a CommandInformation for a new command
@@ -343,5 +344,10 @@ public class CommandInformation {
 	public void setArgs(List<Argument> args) 
 	{
 		this.args = args;
+	}
+	
+	public List<String> getAliases()
+	{
+		return this.aliases;
 	}
 }

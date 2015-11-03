@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandMap;
 import org.bukkit.command.CommandSender;
@@ -25,20 +26,18 @@ import eu.blackwoods.levitate.exception.SyntaxResponseException;
 public class CommandRegistry {
 	
 	private HashMap<CommandInformation, CommandHandler> commands = new HashMap<CommandInformation, CommandHandler>();
-	private List<String> aliases = new ArrayList<String>();
-	private PermissionHandler permissionHandler = null;
-	private HelpMap helpMap = null;
-	private Environment environment = null;
-	private Plugin plugin = null;
+	//private List<String> aliases = new ArrayList<String>();
+	private PermissionHandler permissionHandler;
+	private HelpMap helpMap;
+	private Plugin plugin;
 	
 	/**
 	 * This class registers your commands and handles them.
 	 * This constructor is for Bukkit/Spigot plugins
 	 * @param plugin The JavaPlugin instance
 	 */
-	public CommandRegistry(Plugin plugin) {
-		
-		detectEnvironment();
+	public CommandRegistry(Plugin plugin) 
+	{
 		if(plugin == null) return;
 		this.plugin = plugin;
 	}
@@ -46,7 +45,7 @@ public class CommandRegistry {
 	/**
 	 * Register new command
 	 * @param info CommandInformation with syntax, permission etc
-	 * @param handler The CommandHandler wich handels the execution of the command
+	 * @param handler The CommandHandler which handles the execution of the command
 	 */
 	public void register(CommandInformation info, CommandHandler handler) 
 	{
@@ -54,11 +53,27 @@ public class CommandRegistry {
 		this.commands.put(info, handler);
 	}
 	
-	public void registerAlias(String alias) {
+	
+	public void registerAlias(String command, String alias)
+	{
+		for(CommandInformation info : this.getCommands().keySet())
+		{
+			if(info.getCommand().equals(command))
+			{
+				if(!info.getAliases().contains(command))
+				{
+					info.getAliases().add(alias);
+				}
+			}
+		}
+	}
+	
+	/*public void registerAlias(String alias) 
+	{
 		if(this.aliases.contains(alias.toLowerCase())) 
 			return;
 		this.aliases.add(alias.toLowerCase());
-	}
+	}*/
 	
 	/**
 	 * Register new command with aliases
@@ -92,7 +107,7 @@ public class CommandRegistry {
 			}
 			if(ns.endsWith(" ")) ns = ns.substring(0, ns.length()-1);
 			CommandInformation cinfo = new CommandInformation(ns, info.getPermission());
-			registerAlias(alias);
+			registerAlias(info.getCommand(), alias);
 			this.commands.put(cinfo, handler);
 		}
 		registerFakeCommand(info, aliases);
@@ -104,14 +119,13 @@ public class CommandRegistry {
 		if(aliases == null) 
 			aliases = new String[] {};
 
-		if(this.environment == Environment.SPIGOT || this.environment == Environment.BUKKIT) {
 			try 
 			{
 				final Field f = getPlugin().getServer().getClass().getDeclaredField("commandMap");
 				f.setAccessible(true);
 				CommandMap cmap = (CommandMap)f.get(getPlugin().getServer());
 				cmap.register(info.getCommand(), new Command(info.getCommand(), info.getDescription(), info.getSyntax(), new ArrayList<String>(Arrays.asList(aliases))) {
-
+				
 					@Override
 					public List<String> tabComplete(CommandSender sender, String alias, String[] args) throws IllegalArgumentException 
 					{
@@ -156,7 +170,6 @@ public class CommandRegistry {
 			{
 				e1.printStackTrace();
 			}
-		}
 	}
 	
 	/**
@@ -262,7 +275,8 @@ public class CommandRegistry {
 	 * Register your own PermissionHandler
 	 * @param permissionHandler PermissionHandler which checks whether the sender has permission to execute the command
 	 */
-	public void registerPermissionHandler(PermissionHandler permissionHandler) {
+	public void registerPermissionHandler(PermissionHandler permissionHandler) 
+	{
 		this.permissionHandler = permissionHandler;
 	}
 	
@@ -275,7 +289,7 @@ public class CommandRegistry {
 	}
 	
 	/**
-	 * Register own HelpMaoo
+	 * Register own HelpMap
 	 * @param helpMap Handles the help-message
 	 */
 	public void registerHelpMap(HelpMap helpMap)
@@ -406,49 +420,50 @@ public class CommandRegistry {
 		this.commands = commands;
 	}
 
-	public PermissionHandler getPermissionHandler() {
+	public PermissionHandler getPermissionHandler() 
+	{
 		return this.permissionHandler;
 	}
 
-	public void setPermissionHandler(PermissionHandler permissionHandler) {
+	public void setPermissionHandler(PermissionHandler permissionHandler) 
+	{
 		this.permissionHandler = permissionHandler;
 	}
 	
-	/**
-	 * Auto-Detect the Environment
-	 */
-	public void detectEnvironment() 
+	public Plugin getPlugin() 
 	{
-		try 
-		{
-			Class.forName("org.bukkit.Server.Spigot");
-			this.environment = Environment.SPIGOT;
-		} 
-		catch(Exception ex )
-		{
-			
-		}
-		
-		if(this.environment == null)
-			this.environment = Environment.BUKKIT;
-	}
-
-	public Environment getEnvironment() 
-	{
-		return this.environment;
-	}
-
-	public void setEnvironment(Environment environment) 
-	{
-		this.environment = environment;
-	}
-
-	public Plugin getPlugin() {
 		return this.plugin;
 	}
 
 	public void setPlugin(Plugin plugin) 
 	{
 		this.plugin = plugin;
+	}
+
+	public void unregister(Plugin plugin) 
+	{
+		try 
+		{
+			Field f = getPlugin().getServer().getClass().getDeclaredField("commandMap");
+			f.setAccessible(true);
+			CommandMap cmap = (CommandMap)f.get(getPlugin().getServer());
+			for(CommandInformation info: this.getCommands().keySet())
+			{	
+				Bukkit.getServer().getPluginCommand(info.getCommand()).unregister(cmap);
+				if(info.getAliases().size() > 0)
+				{
+					for(String alias : info.getAliases())
+					{
+						Bukkit.getServer().getPluginCommand(alias).unregister(cmap);
+					}
+				}
+			}
+		} 
+		catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException e) 
+		{
+			e.printStackTrace();
+		}
+		
+		
 	}
 }

@@ -13,7 +13,8 @@ import eu.blackwoods.levitate.exception.SyntaxResponseException;
 public class EqualsSyntax implements SyntaxHandler {
 
 	@Override
-	public void check(String parameter, String passed) throws SyntaxResponseException {
+	public void check(String parameter, String passed) throws SyntaxResponseException 
+	{
 		HashMap<String, String> replaces = new HashMap<String, String>();
 		replaces.put("%arg%", passed);
 		replaces.put("%value%", parameter);
@@ -21,7 +22,8 @@ public class EqualsSyntax implements SyntaxHandler {
 	}
 
 	@Override
-	public List<String> getTabComplete(String parameter, String passed) {
+	public List<String> getTabComplete(String parameter, String passed) 
+	{
 		return new ArrayList<String>(Arrays.asList(parameter));
 	}
 }

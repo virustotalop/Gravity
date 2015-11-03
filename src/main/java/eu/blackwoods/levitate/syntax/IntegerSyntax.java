@@ -12,7 +12,8 @@ import eu.blackwoods.levitate.exception.SyntaxResponseException;
 public class IntegerSyntax implements SyntaxHandler {
 
 	@Override
-	public void check(String parameter, String passed) throws CommandSyntaxException, SyntaxResponseException {
+	public void check(String parameter, String passed) throws CommandSyntaxException, SyntaxResponseException 
+	{
 		HashMap<String, String> replaces = new HashMap<String, String>();
 		replaces.put("%arg%", passed);
 		if(!isInt(passed)) throw new SyntaxResponseException(Message.INTEGERSYNTAX_HAS_NO_INTEGER.get(TextMode.COLOR, replaces));
@@ -79,7 +80,7 @@ public class IntegerSyntax implements SyntaxHandler {
 	    while(lastIndex != -1)
 	    {
 	    	lastIndex = input.indexOf(search,lastIndex);
-			if( lastIndex != -1) 
+			if(lastIndex != -1) 
 			{
 				i++;
 			}

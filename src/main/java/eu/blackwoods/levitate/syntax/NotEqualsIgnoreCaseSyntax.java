@@ -11,15 +11,18 @@ import eu.blackwoods.levitate.exception.SyntaxResponseException;
 public class NotEqualsIgnoreCaseSyntax implements SyntaxHandler {
 
 	@Override
-	public void check(String parameter, String passed) throws SyntaxResponseException {
+	public void check(String parameter, String passed) throws SyntaxResponseException 
+	{
 		HashMap<String, String> replaces = new HashMap<String, String>();
 		replaces.put("%arg%", passed);
 		replaces.put("%value%", parameter);
-		if(parameter.equalsIgnoreCase(passed)) throw new SyntaxResponseException(Message.NOTEQUALSIGNORECASESYNTAX_CANNOT_EQUAL.get(TextMode.COLOR, replaces));
+		if(parameter.equalsIgnoreCase(passed)) 
+			throw new SyntaxResponseException(Message.NOTEQUALSIGNORECASESYNTAX_CANNOT_EQUAL.get(TextMode.COLOR, replaces));
 	}
 
 	@Override
-	public List<String> getTabComplete(String parameter, String passed) {
+	public List<String> getTabComplete(String parameter, String passed) 
+	{
 		return null;
 	}
 

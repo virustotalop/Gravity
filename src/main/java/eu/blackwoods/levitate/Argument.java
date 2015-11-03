@@ -58,7 +58,7 @@ public class Argument implements Cloneable {
 
 	public SyntaxHandler getHandler() 
 	{
-		return handler;
+		return this.handler;
 	}
 
 	public void setHandler(SyntaxHandler handler) 

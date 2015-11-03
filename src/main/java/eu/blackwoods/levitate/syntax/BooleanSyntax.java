@@ -29,7 +29,8 @@ public class BooleanSyntax implements SyntaxHandler {
 	@Override
 	public void check(String parameter, final String passed) throws SyntaxResponseException 
 	{
-		if(this.values.contains(passed.toLowerCase())) return;
+		if(this.values.contains(passed.toLowerCase())) 
+			return;
 		throw new SyntaxResponseException(Message.BOOLEANSYNTAX_HAS_TO_BE_BOOLEAN.get(TextMode.COLOR, new HashMap<String, String>(){{put("%arg%", passed);}}));
 	}
 
