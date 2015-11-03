@@ -298,40 +298,6 @@ public class CommandRegistry {
 	}
 	
 	/**
-	 * Execute a command. This method is for Java-Standalone applications.
-	 * This feature doesn't work at the moment.
-	 * @param command The base-command
-	 * @param args Arguments
-	 * @return
-	 * @throws CommandSyntaxException
-	 * @throws SyntaxResponseException
-	 * @throws NoPermissionException
-	 * @throws ExecutorIncompatibleException
-	 */
-	@Deprecated
-	public boolean userPassCommand(String command, String[] args) throws CommandSyntaxException, SyntaxResponseException, NoPermissionException, ExecutorIncompatibleException 
-	{
-		for(CommandInformation i : this.commands.keySet()) 
-		{
-			if(i.matches(CommandExecutor.PLAYER, command, args)) 
-			{
-				if(this.permissionHandler != null && i.getPermission() != null) 
-				{
-					if(!this.permissionHandler.hasPermission(null, i.getPermission())) 
-					{
-						throw new NoPermissionException(Message.NO_PERMISSION.get(TextMode.COLOR));
-					}
-				}
-				this.commands.get(i).execute(null, command, new ParameterSet(args));
-				return true;
-			}
-		}
-		if(this.helpMap != null) 
-			this.helpMap.onHelp(null, command, args);
-		return false;
-	}
-	
-	/**
 	 * Executes a command as a Bukkit/Spigot player or console.
 	 * You don't need to call it.
 	 * @param sender The sender of the command
@@ -343,7 +309,7 @@ public class CommandRegistry {
 	 * @throws NoPermissionException
 	 * @throws ExecutorIncompatibleException 
 	 */
-	public boolean playerPassCommand(CommandSender sender, String command, String[]args) throws CommandSyntaxException, NoPermissionException, SyntaxResponseException, ExecutorIncompatibleException 
+	private boolean playerPassCommand(CommandSender sender, String command, String[]args) throws CommandSyntaxException, NoPermissionException, SyntaxResponseException, ExecutorIncompatibleException 
 	{
 		CommandExecutor ce = CommandExecutor.PLAYER;
 		if(!(sender instanceof Player)) ce = CommandExecutor.CONSOLE;
@@ -394,20 +360,6 @@ public class CommandRegistry {
 			this.helpMap.onHelp(sender, command, args);
 		}
 		return found;
-	}
-	
-	public static boolean existClass(String clazz) 
-	{
-		try 
-		{
-			Class.forName(clazz);
-			return true;
-		} 
-		catch (Exception e) 
-		{ 
-			
-		}
-		return false;
 	}
 
 	public HashMap<CommandInformation, CommandHandler> getCommands() 

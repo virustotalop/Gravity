@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import eu.blackwoods.levitate.CommandRegistry;
+import me.virustotal.gravity.utils.ReflectionUtils;
 import eu.blackwoods.levitate.Message;
 import eu.blackwoods.levitate.Message.TextMode;
 import eu.blackwoods.levitate.SyntaxHandler;
@@ -13,14 +13,14 @@ import eu.blackwoods.levitate.exception.CommandSyntaxException;
 import eu.blackwoods.levitate.exception.SyntaxResponseException;
 
 public class EnumSyntax implements SyntaxHandler {
-
+	
 	@Override
 	public void check(String parameter, String passed) throws SyntaxResponseException, CommandSyntaxException 
 	{
 		if(parameter.equals("")) throw new CommandSyntaxException(Message.ENUMSYNTAX_NEEDS_CLASSPATH.get(TextMode.COLOR));
 		HashMap<String, String> replaces = new HashMap<String, String>();
 		replaces.put("%class%", parameter);
-		if(!CommandRegistry.existClass(parameter)) throw new CommandSyntaxException(Message.ENUMSYNTAX_CLASS_DOESNT_EXIST.get(TextMode.COLOR, replaces));
+		if(!ReflectionUtils.existClass(parameter)) throw new CommandSyntaxException(Message.ENUMSYNTAX_CLASS_DOESNT_EXIST.get(TextMode.COLOR, replaces));
 		try 
 		{
 			Class<?> cls = Class.forName(parameter);

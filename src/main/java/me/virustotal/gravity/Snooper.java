@@ -7,7 +7,6 @@ import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
-import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
 import org.bukkit.event.Listener;
@@ -39,8 +38,13 @@ public class Snooper {
 					{
 						if(Modifier.isStatic(field.getModifiers()))
 						{
-							//field should be reset to default value
-							field.set(field.get(field.getType().newInstance()), theClass.newInstance().getClass().getField(field.getName()).get(null));
+							if(!Modifier.isFinal(field.getModifiers()))
+							{
+								if(Modifier.isPrivate(field.getModifiers()))
+									field.setAccessible(true);
+								//field should be reset to default value
+								field.set(field.get(field.getType().newInstance()), theClass.newInstance().getClass().getField(field.getName()).get(null));
+							}
 						}
 					}
 				}
@@ -61,7 +65,6 @@ public class Snooper {
 			File jarFile = new File(plugin.getClass().getProtectionDomain().getCodeSource().getLocation().toURI());
 			JarFile jar = new JarFile(jarFile);
 			Enumeration<JarEntry> entries = jar.entries();
-			int count = 0;
 
 			while(entries.hasMoreElements() )
 			{
@@ -76,12 +79,10 @@ public class Snooper {
 						if(Arrays.asList(theClass.getInterfaces()).contains(Listener.class))
 						{
 							pm.registerEvents((Listener) theClass.getDeclaredConstructor(plugin.getClass()).newInstance(plugin), plugin);
-							count ++;
 						}
 					}
 				}
 			}
-			plugin.getLogger().log(Level.INFO, count + " listeners loaded!");
 			jar.close();
 		}
 		catch(Exception ex)
